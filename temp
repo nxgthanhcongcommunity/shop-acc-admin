@@ -1,0 +1,21 @@
+
+"use client";
+
+import { Sidebar } from "flowbite-react";
+import {
+  HiArrowSmRight,
+  HiChartPie,
+  HiInbox,
+  HiOutlineMinusSm,
+  HiOutlinePlusSm,
+  HiShoppingBag,
+  HiTable,
+  HiUser,
+} from "react-icons/hi";
+import { twMerge } from "tailwind-merge";
+
+export function Component() {
+  return (
+    
+  );
+}
