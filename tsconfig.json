@@ -23,5 +23,8 @@
   "include": [
     "src",
     "src/custom.d.ts"
+  ],
+  "exclude": [
+    "src/utils/CloudinaryUploadWidget.jsx"
   ]
 }

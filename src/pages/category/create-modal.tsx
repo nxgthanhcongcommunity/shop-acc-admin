@@ -1,27 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { bannerApi } from "../../api";
+import categoryApi from "../../api/categoryApi";
 import { AddIcon, PlusIcon } from "../../assets/icons";
-import { Button, InputField, Modal } from "../../components";
-import { IBanner } from "../../models";
+import { Button, InputField, Modal, SelectField } from "../../components";
+import { IBanner, ICategory } from "../../models";
+import { bannerApi } from "../../api";
 
 const CreateModal = ({ setToggleData }: any) => {
   const [toggle, setToggle] = useState(false);
+
+  const [banners, setBanners] = useState<IBanner[]>();
+
+  useEffect(() => {
+    (async () => {
+      const response = await bannerApi.getBanners({});
+
+      if (response.status === 200 && response.data.succeed) {
+        const { data: banners } = response.data.data;
+        setBanners(banners);
+      }
+    })();
+  }, []);
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<IBanner>();
+  } = useForm<ICategory>();
 
-  const onSubmit: SubmitHandler<IBanner> = async (data) => {
+  const onSubmit: SubmitHandler<ICategory> = async (data) => {
     setToggle(false);
-
     try {
-      const { status: httpStatus, data: response } = await bannerApi.AddBanner(
-        data
-      );
+      const { status: httpStatus, data: response } =
+        await categoryApi.AddCategory(data);
       if (httpStatus === 200 && response.succeed === true) {
         reset();
         setToggleData((prev: any) => !prev);
@@ -48,6 +60,7 @@ const CreateModal = ({ setToggleData }: any) => {
         </Button>
       </div>
       <Modal
+        modalName="Tạo loại sản phẩm mới"
         toggle={toggle}
         setToggle={setToggle}
         register={register}
@@ -60,6 +73,17 @@ const CreateModal = ({ setToggleData }: any) => {
           </div>
           <div className="col-span-2">
             <InputField field="code" register={register} errors={errors} />
+          </div>
+          <div className="col-span-2">
+            <SelectField
+              field="bannerCode"
+              items={banners?.map((banner) => ({
+                name: banner.name,
+                value: banner.code,
+              }))}
+              register={register}
+              errors={errors}
+            />
           </div>
         </div>
         <div className="flex justify-end gap-x-4">

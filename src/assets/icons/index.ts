@@ -5,3 +5,4 @@ export { default as PlusIcon } from "./plus";
 export { default as SettingIcon } from "./setting";
 export { default as TrashIcon } from "./trash";
 export { default as MicIcon } from "./mic";
+export { default as CloudIcon } from "./cloud";

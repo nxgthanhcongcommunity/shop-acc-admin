@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { bannerApi } from "../../api";
-import { CloseIcon, SettingIcon, TrashIcon } from "../../assets/icons";
-import { IBanner } from "../../models";
-import { Button, Modal } from "../../components";
 import { useForm } from "react-hook-form";
+import categoryApi from "../../api/categoryApi";
+import { SettingIcon, TrashIcon } from "../../assets/icons";
+import { Button, Modal } from "../../components";
+import { ICategory } from "../../models";
 
 type Props = {
   setToggleData: any;
-  banner: IBanner;
+  category: ICategory;
 };
-const DeleteModal = ({ setToggleData, banner }: Props) => {
+const DeleteModal = ({ setToggleData, category }: Props) => {
   const [toggle, setToggle] = useState(false);
 
   const { handleSubmit } = useForm();
@@ -19,7 +19,7 @@ const DeleteModal = ({ setToggleData, banner }: Props) => {
 
     try {
       const { status: httpStatus, data: response } =
-        await bannerApi.DeleteBanner(banner);
+        await categoryApi.DeleteCategory(category);
       if (httpStatus === 200 && response.succeed === true) {
         setToggleData((prev: any) => !prev);
         alert("action succeed");
@@ -49,7 +49,7 @@ const DeleteModal = ({ setToggleData, banner }: Props) => {
         handleSubmit={handleSubmit(onSubmit)}
       >
         <div className="grid gap-4 mb-4 grid-cols-2">
-          <div className="col-span-2">Delete {banner.name} ?</div>
+          <div className="col-span-2">Delete {category.name} ?</div>
         </div>
         <div className="flex justify-end gap-x-4">
           <Button onClick={() => setToggle((prev) => !prev)} skin="alter">

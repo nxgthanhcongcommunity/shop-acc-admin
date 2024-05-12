@@ -9,23 +9,27 @@ import DataTable from "./data-table";
 import TabTitle from "./tab-title";
 import { CloudIcon } from "../../assets/icons";
 import { Button } from "../../components";
+import UploadImage from "./upload-image";
 
 export default function Component() {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
 
   const [toggleData, setToggleData] = useState(false);
 
   const handleFileChange = (event: any) => {
-    setSelectedFile(event.target.files[0]);
+    setSelectedFiles(event.target.files);
   };
 
   const handleFileUpload = () => {
-    if (selectedFile != null) {
+    if (selectedFiles != null) {
       const formData = new FormData();
-      formData.append("file", selectedFile, selectedFile.name);
+      selectedFiles.forEach((file, index) => {
+        formData.append(`file-${index}`, file, file.name);
+      });
 
       axios.post("http://localhost:3003/api/v1/banner/upload", formData);
     }
+    console.log(selectedFiles);
   };
 
   const [activedTab, setActivedTab] = useState(0);
@@ -79,6 +83,7 @@ export default function Component() {
       <ul>
         <li className={activedTab === 0 ? "block" : "hidden"}>
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
+            <UploadImage />
             <CreateModal setToggleData={setToggleData} />
             <DataTable
               reloadToggle={toggleData}
@@ -92,7 +97,7 @@ export default function Component() {
               htmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-64 rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
             >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              {/* <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 <CloudIcon />
                 {selectedFile ? (
                   <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
@@ -110,12 +115,13 @@ export default function Component() {
                     </p>
                   </>
                 )}
-              </div>
+              </div> */}
               <input
                 onChange={handleFileChange}
                 id="dropzone-file"
                 type="file"
-                className="hidden"
+                // className="hidden"
+                multiple
               />
             </label>
             <Button skin="default" onClick={handleFileUpload}>

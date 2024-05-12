@@ -6,7 +6,8 @@ import UpdateModal from "./update-modal";
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
 import { MicIcon } from "../../assets/icons";
-import { IBanner } from "../../models";
+import { IBanner, ICategory } from "../../models";
+import categoryApi from "../../api/categoryApi";
 
 const DataTable = ({
   reloadToggle,
@@ -33,15 +34,15 @@ const DataTable = ({
     };
   }, [queryConfig.name]);
 
-  const [banners, setBanners] = useState<IBanner[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
 
   useEffect(() => {
     (async () => {
-      const response = await bannerApi.getBanners(queryConfig);
+      const response = await categoryApi.GetCategories(queryConfig);
 
       if (response.status === 200 && response.data.succeed) {
-        const { total, data: banners } = response.data.data;
-        setBanners(banners);
+        const { total, data: categories } = response.data.data;
+        setCategories(categories);
         setTotalPage(Math.ceil(total / queryConfig.limit));
       }
     })();
@@ -97,7 +98,10 @@ const DataTable = ({
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Banner name
+              Category name
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Category code
             </th>
             <th scope="col" className="px-6 py-3">
               Banner code
@@ -108,8 +112,8 @@ const DataTable = ({
           </tr>
         </thead>
         <tbody>
-          {banners &&
-            banners.map(({ id, name, code }: any) => (
+          {categories &&
+            categories.map(({ id, name, code, bannerCode }: ICategory) => (
               <tr
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 key={id}
@@ -121,14 +125,15 @@ const DataTable = ({
                   {name}
                 </th>
                 <td className="px-6 py-4">{code}</td>
+                <td className="px-6 py-4">{bannerCode}</td>
                 <td className="px-6 py-4 flex gap-x-2">
                   <UpdateModal
                     setToggleData={setToggleData}
-                    banner={{ id, name, code }}
+                    category={{ id, name, code, bannerCode }}
                   />
                   <DeleteModal
                     setToggleData={setToggleData}
-                    banner={{ id, name, code }}
+                    category={{ id, name, code, bannerCode }}
                   />
                 </td>
               </tr>
