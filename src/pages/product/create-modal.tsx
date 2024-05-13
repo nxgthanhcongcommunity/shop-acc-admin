@@ -1,49 +1,60 @@
 import { fill } from "@cloudinary/url-gen/actions/resize";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { bannerApi } from "../../api";
-import categoryApi from "../../api/categoryApi";
+import { categoryApi } from "../../api";
 import { AddIcon, PlusIcon } from "../../assets/icons";
-import { Button, InputField, Modal, SelectField } from "../../components";
-import { IBanner, ICategory } from "../../models";
-import { cld } from "../../utils";
+import { Button, FileUploader, InputField, Modal, SelectField } from "../../components";
+import { ICategory, IProduct } from "../../models";
+import productApi from "../../api/productApi";
 
 const CreateModal = ({ setToggleData }: any) => {
-  // Instantiate a CloudinaryImage object for the image with the public ID, 'docs/models'.
-  const myImage = cld.image("docs/models");
 
-  // Resize to 250 x 250 pixels using the 'fill' crop mode.
-  myImage.resize(fill().width(250).height(250));
-
-  // Render the image in a React component.
+  const [productChildFiles, setProductChildFiles] = useState<File[] | null>(null);
+  const [productMainFile, setProductMainFile] = useState<File | null>(null);
 
   const [toggle, setToggle] = useState(false);
-
-  const [banners, setBanners] = useState<IBanner[]>();
+  const [categories, setCategories] = useState<ICategory[]>();
 
   useEffect(() => {
     (async () => {
-      const response = await bannerApi.getBanners({});
+      const response = await categoryApi.GetCategories({});
 
       if (response.status === 200 && response.data.succeed) {
-        const { data: banners } = response.data.data;
-        setBanners(banners);
+        const { data: categories } = response.data.data;
+        setCategories(categories);
       }
     })();
   }, []);
 
   const {
     register,
-    handleSubmit,
     reset,
+    handleSubmit,
     formState: { errors },
-  } = useForm<ICategory>();
+  } = useForm<IProduct>();
 
-  const onSubmit: SubmitHandler<ICategory> = async (data) => {
+  const onSubmit: SubmitHandler<IProduct> = async (data) => {
+
+
+    const formData = new FormData();
+
+    if (productChildFiles != null) {
+      [...productChildFiles].forEach((file, index) => {
+        formData.append(`child-files`, file, file.name);
+      });
+    }
+
+    if (productMainFile != null) {
+      formData.append(`main-file`, productMainFile, productMainFile.name);
+    }
+
+    for (const property in data) {
+      formData.append(property, data[property])
+    }
+
     setToggle(false);
     try {
-      const { status: httpStatus, data: response } =
-        await categoryApi.AddCategory(data);
+      const { status: httpStatus, data: response } = await productApi.AddProduct(formData);
       if (httpStatus === 200 && response.succeed === true) {
         reset();
         setToggleData((prev: any) => !prev);
@@ -55,6 +66,14 @@ const CreateModal = ({ setToggleData }: any) => {
     }
     alert("action failed");
     reset();
+  };
+
+  const handleProductChildFilesChange = (files: File[]) => {
+    setProductChildFiles(files);
+  };
+
+  const handleProductMainFileChange = (files: File[]) => {
+    setProductMainFile(files[0]);
   };
 
   return (
@@ -70,31 +89,70 @@ const CreateModal = ({ setToggleData }: any) => {
         </Button>
       </div>
       <Modal
-        modalName="Tạo loại sản phẩm mới"
+        modalName="Tạo sản phẩm mới"
         toggle={toggle}
         setToggle={setToggle}
         register={register}
         errors={errors}
         handleSubmit={handleSubmit(onSubmit)}
       >
-        <div className="grid gap-4 mb-4 grid-cols-2">
-          <div>{/* <UploadComponent /> */}</div>
-          <div className="col-span-2">
-            <InputField field="name" register={register} errors={errors} />
+        <div className="grid gap-4 mb-4 grid-cols-3">
+          <div>
+            <InputField fieldName="Tên sản phẩm" field="name" register={register} errors={errors} />
           </div>
-          <div className="col-span-2">
-            <InputField field="code" register={register} errors={errors} />
+          <div>
+            <InputField fieldName="Mã sản phẩm" field="code" register={register} errors={errors} />
           </div>
-          <div className="col-span-2">
+          <div>
+            <InputField fieldName="Server" field="server" register={register} errors={errors} />
+          </div>
+          <div>
             <SelectField
-              field="bannerCode"
-              items={banners?.map((banner) => ({
-                name: banner.name,
-                value: banner.code,
+              fieldName="Đăng nhập"
+              field="loginType"
+              items={[{ name: 'Google', code: 'google' }, { name: 'Facebook', code: 'facebook' }].map(({ name, code }) => ({
+                name: name,
+                value: code,
               }))}
               register={register}
               errors={errors}
             />
+          </div>
+          <div>
+            <div>
+              <SelectField
+                fieldName="Hệ điều hành"
+                field="operatingSystem"
+                items={[{ name: 'Android', code: 'android' }, { name: 'IOS', code: 'ios' }].map(({ name, code }) => ({
+                  name: name,
+                  value: code,
+                }))}
+                register={register}
+                errors={errors}
+              />
+            </div>
+          </div>
+          <div>
+            <InputField fieldName="Gem/Chono" field="gemChono" register={register} errors={errors} />
+          </div>
+          <div>
+            <InputField fieldName="Mô tả" field="descriptions" register={register} errors={errors} />
+          </div>
+          <div>
+            <SelectField
+              fieldName="Loại"
+              field="categoryCode"
+              items={categories?.map(({ name, code }) => ({
+                name: name,
+                value: code,
+              }))}
+              register={register}
+              errors={errors}
+            />
+          </div>
+          <div className="col-span-3 grid grid-cols-2 gap-4">
+            <FileUploader fieldName="Các hình ảnh con" id="file-uploader-1" onFileSelect={handleProductChildFilesChange} multiple />
+            <FileUploader fieldName="Hình ảnh chính" id="file-uploader-2" onFileSelect={handleProductMainFileChange} />
           </div>
         </div>
         <div className="flex justify-end gap-x-4">
@@ -104,7 +162,7 @@ const CreateModal = ({ setToggleData }: any) => {
           <Button skin="default" type="submit">
             <span className="flex">
               <PlusIcon />
-              Add banner
+              Add product
             </span>
           </Button>
         </div>

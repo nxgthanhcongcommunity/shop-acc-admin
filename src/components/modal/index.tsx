@@ -14,11 +14,10 @@ const Component = ({
       id="crud-modal"
       tabIndex={-1}
       aria-hidden="true"
-      className={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-[rgba(0,0,0,0.4)] ${
-        toggle ? "flex" : "hidden"
-      }`}
+      className={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center w-full md:inset-0 max-h-full bg-[rgba(0,0,0,0.4)] ${toggle ? "flex" : "hidden"
+        }`}
     >
-      <div className="relative p-4 w-full max-w-[600px] max-h-full mt-[20vh]">
+      <div className="relative p-4 w-full max-w-[60%] max-h-full mt-[5vh]">
         {/* Modal content */}
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           {/* Modal header */}

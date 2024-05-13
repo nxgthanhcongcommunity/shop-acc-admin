@@ -1,11 +1,11 @@
-const Component = ({ field, register, errors }: any) => {
+const Component = ({ field, fieldName, register, errors }: any) => {
   return (
     <>
       <label
         htmlFor={field}
         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
       >
-        {field}
+        {fieldName || field}
       </label>
       <input
         id={field}

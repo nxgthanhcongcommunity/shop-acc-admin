@@ -1,11 +1,11 @@
-function Component({ field, items, register }: any) {
+function Component({ field, fieldName, items, register }: any) {
   return (
     <>
       <label
         htmlFor="countries"
         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
       >
-        Select {field}
+        {fieldName || field}
       </label>
       <select
         id="countries"

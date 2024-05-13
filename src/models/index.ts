@@ -1,3 +1,7 @@
+interface IObjectKeys {
+  [key: string]: string,
+}
+
 export interface IBanner {
   id: number;
   name: string;
@@ -9,4 +13,8 @@ export interface ICategory {
   name: string;
   code: string;
   bannerCode: string;
+}
+
+export interface IProduct extends IObjectKeys {
+
 }
