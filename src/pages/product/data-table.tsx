@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { bannerApi } from "../../api";
 import DeleteModal from "./delete-modal";
 import UpdateModal from "./update-modal";
 
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
-import { MicIcon } from "../../assets/icons";
-import { IBanner, ICategory } from "../../models";
 import categoryApi from "../../api/categoryApi";
+import { MicIcon } from "../../assets/icons";
+import { ICategory, IProduct } from "../../models";
+import productApi from "../../api/productApi";
 
 const DataTable = ({
   reloadToggle,
@@ -34,15 +34,15 @@ const DataTable = ({
     };
   }, [queryConfig.name]);
 
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
 
   useEffect(() => {
     (async () => {
-      const response = await categoryApi.GetCategories(queryConfig);
+      const response = await productApi.GetProducts(queryConfig);
 
       if (response.status === 200 && response.data.succeed) {
-        const { total, data: categories } = response.data.data;
-        setCategories(categories);
+        const { total, data: products } = response.data.data;
+        setProducts(products);
         setTotalPage(Math.ceil(total / queryConfig.limit));
       }
     })();
@@ -98,13 +98,34 @@ const DataTable = ({
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Category name
+              Product name
             </th>
             <th scope="col" className="px-6 py-3">
-              Category code
+              Product code
             </th>
             <th scope="col" className="px-6 py-3">
-              Banner code
+              Main img
+            </th>
+            <th scope="col" className="px-6 py-3">
+              childs img
+            </th>
+            <th scope="col" className="px-6 py-3">
+              server
+            </th>
+            <th scope="col" className="px-6 py-3">
+              login type
+            </th>
+            <th scope="col" className="px-6 py-3">
+              operating
+            </th>
+            <th scope="col" className="px-6 py-3">
+              gemChono
+            </th>
+            <th scope="col" className="px-6 py-3">
+              descriptions
+            </th>
+            <th scope="col" className="px-6 py-3">
+              categoryCode
             </th>
             <th scope="col" className="px-6 py-3">
               Action
@@ -112,28 +133,56 @@ const DataTable = ({
           </tr>
         </thead>
         <tbody>
-          {categories &&
-            categories.map(({ id, name, code, bannerCode }: ICategory) => (
+          {products &&
+            products.map((product: any) => (
               <tr
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                key={id}
+                key={product.id}
               >
                 <th
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {name}
+                  {product.name}
                 </th>
-                <td className="px-6 py-4">{code}</td>
-                <td className="px-6 py-4">{bannerCode}</td>
+                <td className="px-6 py-4">{product.code}</td>
+                <td className="px-6 py-4">
+                  <img
+                    src={`http://localhost:3003/public/products/${product.mainFileUrl}`}
+                    alt=""
+                    className="w-16"
+                  />
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex gap-x-1">
+                    {JSON.parse(product.childsFilesUrl).map((url: any) => (
+                      <img
+                        src={`http://localhost:3003/public/products/${url}`}
+                        alt=""
+                        className="w-16"
+                      />
+                    ))}
+                  </div>
+                </td>
+                <td className="px-6 py-4">{product.server}</td>
+                <td className="px-6 py-4">{product.loginType}</td>
+                <td className="px-6 py-4">{product.operatingSystem}</td>
+                <td className="px-6 py-4">{product.gemChono}</td>
+                <td className="px-6 py-4">{product.descriptions}</td>
+                <td className="px-6 py-4">{product.categoryCode}</td>
+
                 <td className="px-6 py-4 flex gap-x-2">
-                  <UpdateModal
+                  {/* <UpdateModal
                     setToggleData={setToggleData}
                     category={{ id, name, code, bannerCode }}
                   />
                   <DeleteModal
                     setToggleData={setToggleData}
                     category={{ id, name, code, bannerCode }}
+                  /> */}
+                  <UpdateModal
+                    setToggleData={setToggleData}
+                    product={product}
                   />
                 </td>
               </tr>
