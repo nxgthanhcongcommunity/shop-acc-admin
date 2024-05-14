@@ -12,7 +12,7 @@ const categoryApi = {
     return response;
   },
 
-  async AddCategory(category: ICategory) {
+  async AddCategory(category: ICategory | FormData) {
     const response = await axiosInstance({
       method: METHODS.POST,
       url: "category/add-category",

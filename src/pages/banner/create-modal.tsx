@@ -54,12 +54,9 @@ const CreateModal = ({ setToggleData }: any) => {
         errors={errors}
         handleSubmit={handleSubmit(onSubmit)}
       >
-        <div className="grid gap-4 mb-4 grid-cols-2">
-          <div className="col-span-2">
-            <InputField field="name" register={register} errors={errors} />
-          </div>
-          <div className="col-span-2">
-            <InputField field="code" register={register} errors={errors} />
+        <div className="grid gap-4 mb-4 grid-cols-3">
+          <div>
+            <InputField fieldName="Banne name" field="name" register={register} errors={errors} />
           </div>
         </div>
         <div className="flex justify-end gap-x-4">

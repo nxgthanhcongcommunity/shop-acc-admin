@@ -4,4 +4,6 @@ export { default as InputField } from "./input-field";
 export { default as Modal } from "./modal";
 export { default as SelectField } from "./select-field";
 export { default as FileUploader } from "./file-uploader";
-//FileUploader
+export { default as Tab } from "./tab";
+export { default as Search } from "./search";
+//Tab

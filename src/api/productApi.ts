@@ -21,6 +21,15 @@ const productApi = {
     return response;
   },
 
+  async DeleteProduct(product: IProduct | FormData) {
+    const response = await axiosInstance({
+      method: METHODS.DELETE,
+      url: "product/delete-product",
+      data: product,
+    });
+    return response;
+  },
+
   async GetProducts(queryConfig: any) {
     const response = await axiosInstance({
       method: METHODS.GET,

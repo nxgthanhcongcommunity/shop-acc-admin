@@ -17,6 +17,9 @@ type Props = {
   product: IProduct;
 };
 const UpdateModal = ({ setToggleData, product }: Props) => {
+
+  console.log("product update: ", product)
+
   const [toggle, setToggle] = useState(false);
   const [categories, setCategories] = useState<IBanner[]>();
 
@@ -59,7 +62,7 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
     }
 
     for (const property in data) {
-      formData.append(property, data[property]);
+      formData.append(property, data[property].toString());
     }
 
     setToggle(false);
@@ -67,9 +70,7 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
       const { status: httpStatus, data: response } =
         await productApi.UpdateProduct(formData);
       if (httpStatus === 200 && response.succeed === true) {
-        reset();
         setToggleData((prev: any) => !prev);
-        alert("action succeed");
         return;
       }
     } catch (err) {
@@ -195,6 +196,7 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
             <div className="flex gap-2">
               {JSON.parse(product.childsFilesUrl).map((url: any) => (
                 <img
+                  key={url}
                   src={`http://localhost:3003/public/products/${url}`}
                   alt=""
                   className="w-28 object-cover"
@@ -212,13 +214,13 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
           <div className="col-span-3 grid grid-cols-2 gap-4">
             <FileUploader
               fieldName="Các hình ảnh con"
-              id="file-uploader-1"
+              id="update-file-uploader-1"
               onFileSelect={handleProductChildFilesChange}
               multiple
             />
             <FileUploader
               fieldName="Hình ảnh chính"
-              id="file-uploader-2"
+              id="update-file-uploader-2"
               onFileSelect={handleProductMainFileChange}
             />
           </div>

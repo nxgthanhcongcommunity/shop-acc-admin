@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import CreateModal from "./create-modal";
 
-import "react-responsive-pagination/themes/classic.css";
 import { Tab } from "../../components";
 import { tabTitles } from "../../constants";
 import DataTable from "./data-table";
@@ -13,8 +11,7 @@ export default function Component() {
 
   const contents = [
     (
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
-        <CreateModal setToggleData={setToggleData} />
+      <div className="p-12 relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
         <DataTable
           reloadToggle={toggleData}
           setToggleData={setToggleData}
@@ -25,7 +22,7 @@ export default function Component() {
 
   return (
     <div className="bg-white dark:bg-gray-900">
-      <Tab tabs={tabTitles.banner} contents={contents} />
+      <Tab tabs={tabTitles.account} contents={contents} />
     </div>
   );
 }

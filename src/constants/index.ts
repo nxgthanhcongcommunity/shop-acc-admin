@@ -9,3 +9,5 @@ export const METHODS = {
   PUT: "PUT",
   DELETE: "DELETE",
 };
+
+export { default as tabTitles } from './tabTitles'

@@ -49,7 +49,7 @@ const CreateModal = ({ setToggleData }: any) => {
     }
 
     for (const property in data) {
-      formData.append(property, data[property])
+      formData.append(property, data[property].toString())
     }
 
     setToggle(false);

@@ -6,6 +6,7 @@ const FileUploader = ({ id, fieldName, multiple, extension, onFileSelect }: any)
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
     const handleFileChange = (event: any) => {
+        console.log(event.target.files)
         setSelectedFiles(event.target.files);
         if (onFileSelect) {
             onFileSelect(event.target.files);

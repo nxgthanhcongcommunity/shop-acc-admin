@@ -28,9 +28,7 @@ const UpdateModal = ({ setToggleData, banner }: Props) => {
       const { status: httpStatus, data: response } =
         await bannerApi.UpdateBanner(data);
       if (httpStatus === 200 && response.succeed === true) {
-        reset();
         setToggleData((prev: any) => !prev);
-        alert("action succeed");
         return;
       }
     } catch (err) {

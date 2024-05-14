@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import {
+  AccountPage,
   BannerPage,
   CategoryPage,
   HomePage,
@@ -32,6 +33,11 @@ const router = createBrowserRouter(
           path: "products",
           element: <ProductPage />,
         },
+        {
+          path: "accounts",
+          element: <AccountPage />,
+        },
+        //AccountPage
       ],
     },
   ],

@@ -3,13 +3,14 @@ import { useForm } from "react-hook-form";
 import categoryApi from "../../api/categoryApi";
 import { SettingIcon, TrashIcon } from "../../assets/icons";
 import { Button, Modal } from "../../components";
-import { ICategory } from "../../models";
+import { ICategory, IProduct } from "../../models";
+import productApi from "../../api/productApi";
 
 type Props = {
   setToggleData: any;
-  category: ICategory;
+  product: IProduct;
 };
-const DeleteModal = ({ setToggleData, category }: Props) => {
+const DeleteModal = ({ setToggleData, product }: Props) => {
   const [toggle, setToggle] = useState(false);
 
   const { handleSubmit } = useForm();
@@ -19,7 +20,7 @@ const DeleteModal = ({ setToggleData, category }: Props) => {
 
     try {
       const { status: httpStatus, data: response } =
-        await categoryApi.DeleteCategory(category);
+        await productApi.DeleteProduct(product);
       if (httpStatus === 200 && response.succeed === true) {
         setToggleData((prev: any) => !prev);
         alert("action succeed");
@@ -49,7 +50,7 @@ const DeleteModal = ({ setToggleData, category }: Props) => {
         handleSubmit={handleSubmit(onSubmit)}
       >
         <div className="grid gap-4 mb-4 grid-cols-2">
-          <div className="col-span-2">Delete {category.name} ?</div>
+          <div className="col-span-2">Delete {product.name} ?</div>
         </div>
         <div className="flex justify-end gap-x-4">
           <Button onClick={() => setToggle((prev) => !prev)} skin="alter">

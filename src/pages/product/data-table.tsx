@@ -157,6 +157,7 @@ const DataTable = ({
                   <div className="flex gap-x-1">
                     {JSON.parse(product.childsFilesUrl).map((url: any) => (
                       <img
+                        key={url}
                         src={`http://localhost:3003/public/products/${url}`}
                         alt=""
                         className="w-16"
@@ -181,6 +182,10 @@ const DataTable = ({
                     category={{ id, name, code, bannerCode }}
                   /> */}
                   <UpdateModal
+                    setToggleData={setToggleData}
+                    product={product}
+                  />
+                  <DeleteModal
                     setToggleData={setToggleData}
                     product={product}
                   />
