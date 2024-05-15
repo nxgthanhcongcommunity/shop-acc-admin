@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { bannerApi } from "../../api";
+import { bannerApi, categoryApi } from "../../api";
 import { EditIcon, SettingIcon } from "../../assets/icons";
 import { Button, InputField, Modal, SelectField } from "../../components";
 import { IBanner, ICategory } from "../../models";
@@ -38,7 +38,7 @@ const UpdateModal = ({ category }: Props) => {
   });
 
   const onSubmit: SubmitHandler<ICategory> = async (data) => {
-    const response = await bannerApi.UpdateBanner(data);
+    const response = await categoryApi.UpdateCategory(data);
 
     if (response == null) {
       alert("action failed"); return;

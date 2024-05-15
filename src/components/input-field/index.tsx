@@ -1,4 +1,4 @@
-const Component = ({ field, fieldName, register, errors }: any) => {
+const Component = ({ field, fieldName, type, register, errors }: any) => {
   return (
     <>
       <label
@@ -8,6 +8,7 @@ const Component = ({ field, fieldName, register, errors }: any) => {
         {fieldName || field}
       </label>
       <input
+        type={type || "text"}
         id={field}
         placeholder={`${field}...`}
         {...register(field)}

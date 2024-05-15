@@ -23,10 +23,6 @@ const UpdateModal = ({ banner }: Props) => {
   const onSubmit: SubmitHandler<IBanner> = async (data) => {
 
     const response = await bannerApi.UpdateBanner(data);
-    if (response == null) {
-      alert("action failed!");
-      return;
-    }
 
     setToggle(false);
     reset();
@@ -53,6 +49,9 @@ const UpdateModal = ({ banner }: Props) => {
         handleSubmit={handleSubmit(onSubmit)}
       >
         <div className="grid gap-4 mb-4 grid-cols-2">
+          <div className="col-span-2">
+            <InputField field="order" type="number" register={register} errors={errors} />
+          </div>
           <div className="col-span-2">
             <InputField field="name" register={register} errors={errors} />
           </div>

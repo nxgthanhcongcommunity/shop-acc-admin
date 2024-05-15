@@ -81,6 +81,9 @@ const DataTable = () => {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
+              Order
+            </th>
+            <th scope="col" className="px-6 py-3">
               Banner name
             </th>
             <th scope="col" className="px-6 py-3">
@@ -93,23 +96,22 @@ const DataTable = () => {
         </thead>
         <tbody>
           {states.banners &&
-            states.banners.map(({ id, name, code }: any) => (
+            states.banners.map((banner: IBanner) => (
               <tr
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                key={id}
+                key={banner.id}
               >
                 <th
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {name}
+                  {banner.order}
                 </th>
-                <td className="px-6 py-4">{code}</td>
+                <td className="px-6 py-4">{banner.name}</td>
+                <td className="px-6 py-4">{banner.code}</td>
                 <td className="px-6 py-4 flex gap-x-2">
-                  <UpdateModal banner={{ id, name, code }}
-                  />
-                  <DeleteModal banner={{ id, name, code }}
-                  />
+                  <UpdateModal banner={banner} />
+                  <DeleteModal banner={banner} />
                 </td>
               </tr>
             ))}

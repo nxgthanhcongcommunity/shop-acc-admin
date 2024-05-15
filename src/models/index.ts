@@ -6,6 +6,7 @@ export interface IBanner {
   id: number;
   name: string;
   code: string;
+  order: number;
 }
 
 export interface ICategory extends IObjectKeys {
