@@ -11,7 +11,7 @@ const Search = ({ onTextChange }: any) => {
     }
 
     return (
-        <div className="flex items-center max-w-lg mx-auto">
+        <div className="flex items-center w-[30%] mb-4">
             <label htmlFor="voice-search" className="sr-only">
                 Search
             </label>

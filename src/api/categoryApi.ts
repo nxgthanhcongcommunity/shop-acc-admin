@@ -1,6 +1,7 @@
 import { METHODS } from "../constants";
 import { ICategory } from "../models";
 import axiosInstance from "./axiosInstance";
+import { transformResponse } from "./utils";
 
 const categoryApi = {
   async GetCategories(queryConfig: any) {
@@ -9,7 +10,7 @@ const categoryApi = {
       url: "category/get-categories",
       params: queryConfig,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async AddCategory(category: ICategory | FormData) {
@@ -18,7 +19,7 @@ const categoryApi = {
       url: "category/add-category",
       data: category,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async UpdateCategory(category: ICategory) {
@@ -27,7 +28,7 @@ const categoryApi = {
       url: "category/update-category",
       data: category,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async DeleteCategory(category: ICategory) {
@@ -36,7 +37,7 @@ const categoryApi = {
       url: "category/delete-category",
       data: category,
     });
-    return response;
+    return transformResponse(response);
   },
 };
 

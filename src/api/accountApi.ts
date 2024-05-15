@@ -1,5 +1,6 @@
 import { METHODS } from "../constants";
 import axiosInstance from "./axiosInstance";
+import { transformResponse } from "./utils";
 
 const accountApi = {
   async GetAccounts(queryConfig: any) {
@@ -8,7 +9,8 @@ const accountApi = {
       url: "account/get-accounts",
       params: queryConfig,
     });
-    return response;
+    return transformResponse(response);
+
   },
 
 };

@@ -13,12 +13,11 @@ import {
 import { IBanner, IProduct } from "../../models";
 
 type Props = {
-  setToggleData: any;
   product: IProduct;
 };
-const UpdateModal = ({ setToggleData, product }: Props) => {
+const UpdateModal = ({ product }: Props) => {
 
-  console.log("product update: ", product)
+  const { REACT_APP_API_URL } = process.env
 
   const [toggle, setToggle] = useState(false);
   const [categories, setCategories] = useState<IBanner[]>();
@@ -29,14 +28,15 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
   const [productMainFile, setProductMainFile] = useState<File | null>(null);
 
   useEffect(() => {
-    (async () => {
-      const response = await categoryApi.GetCategories({});
 
-      if (response.status === 200 && response.data.succeed) {
-        const { data: categories } = response.data.data;
-        setCategories(categories);
-      }
+    (async () => {
+
+      const response = await categoryApi.GetCategories({});
+      if (response == null) { alert("action failed"); return; }
+      setCategories(response.data);
+
     })();
+
   }, []);
 
   const {
@@ -65,19 +65,12 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
       formData.append(property, data[property].toString());
     }
 
-    setToggle(false);
-    try {
-      const { status: httpStatus, data: response } =
-        await productApi.UpdateProduct(formData);
-      if (httpStatus === 200 && response.succeed === true) {
-        setToggleData((prev: any) => !prev);
-        return;
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    alert("action failed");
+    const response = await productApi.UpdateProduct(formData);
+    if (response == null) { alert("action failed"); return; }
+
     reset();
+    setToggle(false);
+
   };
 
   const handleProductChildFilesChange = (files: File[]) => {
@@ -197,7 +190,7 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
               {JSON.parse(product.childsFilesUrl).map((url: any) => (
                 <img
                   key={url}
-                  src={`http://localhost:3003/public/products/${url}`}
+                  src={`${REACT_APP_API_URL}/public/products/${url}`}
                   alt=""
                   className="w-28 object-cover"
                 />
@@ -205,7 +198,7 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
             </div>
             <div className="grid place-content-center">
               <img
-                src={`http://localhost:3003/public/products/${product.mainFileUrl}`}
+                src={`${REACT_APP_API_URL}/public/products/${product.mainFileUrl}`}
                 alt=""
                 className="w-32"
               />
@@ -213,7 +206,7 @@ const UpdateModal = ({ setToggleData, product }: Props) => {
           </div>
           <div className="col-span-3 grid grid-cols-2 gap-4">
             <FileUploader
-              fieldName="Các hình ảnh con"
+              fieldName="Hình ảnh con"
               id="update-file-uploader-1"
               onFileSelect={handleProductChildFilesChange}
               multiple

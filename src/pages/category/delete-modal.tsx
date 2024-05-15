@@ -6,29 +6,23 @@ import { Button, Modal } from "../../components";
 import { ICategory } from "../../models";
 
 type Props = {
-  setToggleData: any;
   category: ICategory;
 };
-const DeleteModal = ({ setToggleData, category }: Props) => {
+const DeleteModal = ({ category }: Props) => {
   const [toggle, setToggle] = useState(false);
 
-  const { handleSubmit } = useForm();
+  const { handleSubmit, reset } = useForm();
 
   const onSubmit = async () => {
-    setToggle(false);
 
-    try {
-      const { status: httpStatus, data: response } =
-        await categoryApi.DeleteCategory(category);
-      if (httpStatus === 200 && response.succeed === true) {
-        setToggleData((prev: any) => !prev);
-        alert("action succeed");
-        return;
-      }
-    } catch (err) {
-      console.log(err);
+    const response = await categoryApi.DeleteCategory(category);
+    if (response == null) {
+      alert("action failed");
+      return;
     }
-    alert("action failed");
+
+    reset();
+    setToggle(false);
   };
 
   return (

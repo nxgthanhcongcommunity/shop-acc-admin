@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { bannerApi } from "../../api";
-import { IBanner } from "../../models";
-import { CloseIcon, EditIcon, PlusIcon, SettingIcon } from "../../assets/icons";
+import { EditIcon, SettingIcon } from "../../assets/icons";
 import { Button, InputField, Modal } from "../../components";
+import { IBanner } from "../../models";
 
 type Props = {
-  setToggleData: any;
   banner: IBanner;
 };
-const UpdateModal = ({ setToggleData, banner }: Props) => {
+const UpdateModal = ({ banner }: Props) => {
   const [toggle, setToggle] = useState(false);
 
   const {
@@ -22,20 +21,16 @@ const UpdateModal = ({ setToggleData, banner }: Props) => {
   });
 
   const onSubmit: SubmitHandler<IBanner> = async (data) => {
-    setToggle(false);
 
-    try {
-      const { status: httpStatus, data: response } =
-        await bannerApi.UpdateBanner(data);
-      if (httpStatus === 200 && response.succeed === true) {
-        setToggleData((prev: any) => !prev);
-        return;
-      }
-    } catch (err) {
-      console.log(err);
+    const response = await bannerApi.UpdateBanner(data);
+    if (response == null) {
+      alert("action failed!");
+      return;
     }
-    alert("action failed");
+
+    setToggle(false);
     reset();
+
   };
 
   return (

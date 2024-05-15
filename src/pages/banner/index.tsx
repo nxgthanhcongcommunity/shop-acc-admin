@@ -9,16 +9,12 @@ import { tabTitles } from "../../constants";
 import DataTable from "./data-table";
 
 export default function Component() {
-  const [toggleData, setToggleData] = useState(false);
 
   const contents = [
     (
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
-        <CreateModal setToggleData={setToggleData} />
-        <DataTable
-          reloadToggle={toggleData}
-          setToggleData={setToggleData}
-        />
+        <CreateModal />
+        <DataTable />
       </div>
     ),
   ]

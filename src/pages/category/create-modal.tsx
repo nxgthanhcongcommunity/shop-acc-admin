@@ -6,7 +6,7 @@ import { Button, FileUploader, InputField, Modal, SelectField } from "../../comp
 import { IBanner, ICategory } from "../../models";
 import { bannerApi } from "../../api";
 
-const CreateModal = ({ setToggleData }: any) => {
+const CreateModal = () => {
   const [toggle, setToggle] = useState(false);
 
   const [banners, setBanners] = useState<IBanner[]>();
@@ -18,10 +18,14 @@ const CreateModal = ({ setToggleData }: any) => {
     (async () => {
       const response = await bannerApi.getBanners({});
 
-      if (response.status === 200 && response.data.succeed) {
-        const { data: banners } = response.data.data;
-        setBanners(banners);
+      if (response == null) {
+        alert("action failed!");
+        return;
       }
+
+      const { data: banners } = response;
+      setBanners(banners);
+
     })();
   }, []);
 
@@ -44,21 +48,15 @@ const CreateModal = ({ setToggleData }: any) => {
       formData.append(property, data[property].toString())
     }
 
-    setToggle(false);
-    try {
-      const { status: httpStatus, data: response } =
-        await categoryApi.AddCategory(formData);
-      if (httpStatus === 200 && response.succeed === true) {
-        reset();
-        setToggleData((prev: any) => !prev);
-        alert("action succeed");
-        return;
-      }
-    } catch (err) {
-      console.log(err);
+    const response = await categoryApi.AddCategory(formData);
+    if (response == null) {
+      alert("action failed!");
+      return;
     }
-    alert("action failed");
+
     reset();
+    setToggle(false);
+
   };
 
   const handleProductMainFileChange = (files: File[]) => {

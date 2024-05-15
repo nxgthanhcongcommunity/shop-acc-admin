@@ -5,7 +5,7 @@ import { AddIcon, PlusIcon } from "../../assets/icons";
 import { Button, InputField, Modal } from "../../components";
 import { IBanner } from "../../models";
 
-const CreateModal = ({ setToggleData }: any) => {
+const CreateModal = () => {
   const [toggle, setToggle] = useState(false);
 
   const {
@@ -16,23 +16,15 @@ const CreateModal = ({ setToggleData }: any) => {
   } = useForm<IBanner>();
 
   const onSubmit: SubmitHandler<IBanner> = async (data) => {
-    setToggle(false);
 
-    try {
-      const { status: httpStatus, data: response } = await bannerApi.AddBanner(
-        data
-      );
-      if (httpStatus === 200 && response.succeed === true) {
-        reset();
-        setToggleData((prev: any) => !prev);
-        alert("action succeed");
-        return;
-      }
-    } catch (err) {
-      console.log(err);
+    const response = await bannerApi.AddBanner(data);
+    if (response == null) {
+      alert("action failed!");
+      return;
     }
-    alert("action failed");
+
     reset();
+    setToggle(false);
   };
 
   return (

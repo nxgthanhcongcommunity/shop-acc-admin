@@ -1,35 +1,29 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import categoryApi from "../../api/categoryApi";
+import productApi from "../../api/productApi";
 import { SettingIcon, TrashIcon } from "../../assets/icons";
 import { Button, Modal } from "../../components";
-import { ICategory, IProduct } from "../../models";
-import productApi from "../../api/productApi";
+import { IProduct } from "../../models";
 
 type Props = {
-  setToggleData: any;
   product: IProduct;
 };
-const DeleteModal = ({ setToggleData, product }: Props) => {
+const DeleteModal = ({ product }: Props) => {
   const [toggle, setToggle] = useState(false);
 
-  const { handleSubmit } = useForm();
+  const { handleSubmit, reset } = useForm();
 
   const onSubmit = async () => {
+
+    const response = await productApi.DeleteProduct(product);
+    if (response == null) {
+      alert("action failed");
+      return;
+    }
+
+    reset();
     setToggle(false);
 
-    try {
-      const { status: httpStatus, data: response } =
-        await productApi.DeleteProduct(product);
-      if (httpStatus === 200 && response.succeed === true) {
-        setToggleData((prev: any) => !prev);
-        alert("action succeed");
-        return;
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    alert("action failed");
   };
 
   return (

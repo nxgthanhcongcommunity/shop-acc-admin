@@ -6,29 +6,23 @@ import { Button, Modal } from "../../components";
 import { useForm } from "react-hook-form";
 
 type Props = {
-  setToggleData: any;
   banner: IBanner;
 };
-const DeleteModal = ({ setToggleData, banner }: Props) => {
+const DeleteModal = ({ banner }: Props) => {
   const [toggle, setToggle] = useState(false);
 
-  const { handleSubmit } = useForm();
+  const { handleSubmit, reset } = useForm();
 
   const onSubmit = async () => {
-    setToggle(false);
 
-    try {
-      const { status: httpStatus, data: response } =
-        await bannerApi.DeleteBanner(banner);
-      if (httpStatus === 200 && response.succeed === true) {
-        setToggleData((prev: any) => !prev);
-        alert("action succeed");
-        return;
-      }
-    } catch (err) {
-      console.log(err);
+    const response = await bannerApi.DeleteBanner(banner);
+    if (response == null) {
+      alert("action failed!");
+      return;
     }
-    alert("action failed");
+
+    setToggle(false);
+    reset();
   };
 
   return (

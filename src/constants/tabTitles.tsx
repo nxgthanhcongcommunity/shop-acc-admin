@@ -40,6 +40,7 @@ const defaultTabTitles = [
 const tabTitles = {
   account: defaultTabTitles,
   banner: defaultTabTitles,
+  category: defaultTabTitles,
 }
 
 export default tabTitles;

@@ -1,11 +1,10 @@
-import { fill } from "@cloudinary/url-gen/actions/resize";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { categoryApi } from "../../api";
+import productApi from "../../api/productApi";
 import { AddIcon, PlusIcon } from "../../assets/icons";
 import { Button, FileUploader, InputField, Modal, SelectField } from "../../components";
 import { ICategory, IProduct } from "../../models";
-import productApi from "../../api/productApi";
 
 const CreateModal = ({ setToggleData }: any) => {
 
@@ -16,14 +15,19 @@ const CreateModal = ({ setToggleData }: any) => {
   const [categories, setCategories] = useState<ICategory[]>();
 
   useEffect(() => {
-    (async () => {
-      const response = await categoryApi.GetCategories({});
 
-      if (response.status === 200 && response.data.succeed) {
-        const { data: categories } = response.data.data;
-        setCategories(categories);
+    (async () => {
+
+      const response = await categoryApi.GetCategories({});
+      if (response == null) {
+        alert("action failed");
+        return;
       }
+
+      setCategories(response.data);
+
     })();
+
   }, []);
 
   const {
@@ -34,7 +38,6 @@ const CreateModal = ({ setToggleData }: any) => {
   } = useForm<IProduct>();
 
   const onSubmit: SubmitHandler<IProduct> = async (data) => {
-
 
     const formData = new FormData();
 
@@ -52,20 +55,15 @@ const CreateModal = ({ setToggleData }: any) => {
       formData.append(property, data[property].toString())
     }
 
-    setToggle(false);
-    try {
-      const { status: httpStatus, data: response } = await productApi.AddProduct(formData);
-      if (httpStatus === 200 && response.succeed === true) {
-        reset();
-        setToggleData((prev: any) => !prev);
-        alert("action succeed");
-        return;
-      }
-    } catch (err) {
-      console.log(err);
+    const response = await productApi.AddProduct(formData);
+    if (response == null) {
+      alert("action failed");
+      return;
     }
-    alert("action failed");
+
     reset();
+    setToggle(false);
+
   };
 
   const handleProductChildFilesChange = (files: File[]) => {

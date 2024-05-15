@@ -1,6 +1,7 @@
 import { METHODS } from "../constants";
 import { IBanner } from "../models";
 import axiosInstance from "./axiosInstance";
+import { transformResponse } from "./utils";
 
 const bannerApi = {
   async getBanners(queryConfig: any) {
@@ -9,7 +10,7 @@ const bannerApi = {
       url: "banner/get-banners",
       params: queryConfig,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async AddBanner(banner: IBanner) {
@@ -18,7 +19,7 @@ const bannerApi = {
       url: "banner/add-banner",
       data: banner,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async UpdateBanner(banner: IBanner) {
@@ -27,7 +28,7 @@ const bannerApi = {
       url: "banner/update-banner",
       data: banner,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async DeleteBanner(banner: IBanner) {
@@ -36,16 +37,8 @@ const bannerApi = {
       url: "banner/delete-banner",
       data: banner,
     });
-    return response;
+    return transformResponse(response);
   },
 };
 
 export default bannerApi;
-
-/*
-
-useEffect(() => {
-        axiosInstance.get("http://localhost:3003/api/v1/banner/get-banners");
-    }, [])
-
-*/

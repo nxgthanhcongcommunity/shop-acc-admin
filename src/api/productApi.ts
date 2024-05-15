@@ -1,6 +1,7 @@
 import { METHODS } from "../constants";
 import { IProduct } from "../models";
 import axiosInstance from "./axiosInstance";
+import { transformResponse } from "./utils";
 
 const productApi = {
   async AddProduct(product: IProduct | FormData) {
@@ -9,7 +10,7 @@ const productApi = {
       url: "product/add-product",
       data: product,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async UpdateProduct(product: IProduct | FormData) {
@@ -18,7 +19,7 @@ const productApi = {
       url: "product/update-product",
       data: product,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async DeleteProduct(product: IProduct | FormData) {
@@ -27,7 +28,7 @@ const productApi = {
       url: "product/delete-product",
       data: product,
     });
-    return response;
+    return transformResponse(response);
   },
 
   async GetProducts(queryConfig: any) {
@@ -36,7 +37,7 @@ const productApi = {
       url: "product/get-products",
       params: queryConfig,
     });
-    return response;
+    return transformResponse(response);
   },
 };
 

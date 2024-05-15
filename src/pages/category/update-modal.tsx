@@ -6,22 +6,26 @@ import { Button, InputField, Modal, SelectField } from "../../components";
 import { IBanner, ICategory } from "../../models";
 
 type Props = {
-  setToggleData: any;
   category: ICategory;
 };
-const UpdateModal = ({ setToggleData, category }: Props) => {
+const UpdateModal = ({ category }: Props) => {
   const [toggle, setToggle] = useState(false);
   const [banners, setBanners] = useState<IBanner[]>();
 
   useEffect(() => {
     (async () => {
+
       const response = await bannerApi.getBanners({});
 
-      if (response.status === 200 && response.data.succeed) {
-        const { data: banners } = response.data.data;
-        setBanners(banners);
+      if (response == null) {
+        alert("action failed");
+        return;
       }
+
+      setBanners(response.data);
+
     })();
+
   }, []);
 
   const {
@@ -34,20 +38,15 @@ const UpdateModal = ({ setToggleData, category }: Props) => {
   });
 
   const onSubmit: SubmitHandler<ICategory> = async (data) => {
+    const response = await bannerApi.UpdateBanner(data);
+
+    if (response == null) {
+      alert("action failed"); return;
+    }
+
+    reset();
     setToggle(false);
 
-    try {
-      const { status: httpStatus, data: response } =
-        await bannerApi.UpdateBanner(data);
-      if (httpStatus === 200 && response.succeed === true) {
-        setToggleData((prev: any) => !prev);
-        return;
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    alert("action failed");
-    reset();
   };
 
   return banners ? (

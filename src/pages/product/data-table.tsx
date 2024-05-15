@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import DeleteModal from "./delete-modal";
 import UpdateModal from "./update-modal";
 
@@ -8,90 +9,76 @@ import categoryApi from "../../api/categoryApi";
 import { MicIcon } from "../../assets/icons";
 import { ICategory, IProduct } from "../../models";
 import productApi from "../../api/productApi";
+import { useDebounce } from "../../hooks";
+import { Search } from "../../components";
 
-const DataTable = ({
-  reloadToggle,
-  setToggleData,
-}: {
-  reloadToggle: boolean;
-  setToggleData: any;
-}) => {
-  const [totalPage, setTotalPage] = useState(0);
-  const [queryConfig, setQueryConfig] = useState({
-    page: 1,
-    limit: 5,
-    name: "",
-  });
-  const [debouncedTerm, setDebouncedTerm] = useState("");
+const DataTable = () => {
 
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedTerm(queryConfig.name);
-    }, 2000);
+  const { REACT_APP_API_URL } = process.env
 
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [queryConfig.name]);
+  const [states, updateStates] = useState({
+    products: [],
+    totalPage: 0,
+    queryConfig: {
+      page: 1,
+      limit: 5,
+      name: "",
+    }
+  })
 
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const debouncedName = useDebounce(states.queryConfig.name, 1000);
 
   useEffect(() => {
+
     (async () => {
-      const response = await productApi.GetProducts(queryConfig);
 
-      if (response.status === 200 && response.data.succeed) {
-        const { total, data: products } = response.data.data;
-        setProducts(products);
-        setTotalPage(Math.ceil(total / queryConfig.limit));
-      }
+      const response = await productApi.GetProducts(states.queryConfig);
+      if (response == null) return;
+
+      const { total, data: products } = response;
+      updateStates({
+        ...states,
+        products,
+        totalPage: Math.ceil(total / states.queryConfig.limit)
+      });
+
     })();
-  }, [queryConfig.page, reloadToggle, debouncedTerm]);
 
-  const handleSearchChange = (e: any) => {
-    setQueryConfig({ ...queryConfig, page: 1, name: e.target.value });
+  }, [states.queryConfig.page, debouncedName]);
+
+  const handleSearchChange = (currentValue: string) => {
+
+    updateStates({
+      ...states,
+      queryConfig: {
+        ...states.queryConfig,
+        page: 1,
+        name: currentValue
+      }
+    });
+
   };
 
   return (
     <>
-      <div className="flex items-center max-w-lg mx-auto">
-        <label htmlFor="voice-search" className="sr-only">
-          Search
-        </label>
-        <div className="relative w-full">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 21 21"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11.15 5.6h.01m3.337 1.913h.01m-6.979 0h.01M5.541 11h.01M15 15h2.706a1.957 1.957 0 0 0 1.883-1.325A9 9 0 1 0 2.043 11.89 9.1 9.1 0 0 0 7.2 19.1a8.62 8.62 0 0 0 3.769.9A2.013 2.013 0 0 0 13 18v-.857A2.034 2.034 0 0 1 15 15Z"
-              />
-            </svg>
-          </div>
-          <input
-            value={queryConfig.name}
-            onChange={handleSearchChange}
-            type="text"
-            id="voice-search"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search Mockups, Logos, Design Templates..."
-            required
-          />
-          <button
-            type="button"
-            className="absolute inset-y-0 end-0 flex items-center pe-3"
-          >
-            <MicIcon />
-          </button>
-        </div>
+      <div className="flex justify-between">
+        <Search onTextChange={handleSearchChange} />
+        <ResponsivePagination
+          current={states.queryConfig.page}
+          total={states.totalPage}
+          onPageChange={(page) => {
+
+            updateStates({
+              ...states,
+              queryConfig: {
+                ...states.queryConfig,
+                page,
+              }
+            })
+
+          }}
+          maxWidth={300}
+        />
       </div>
 
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4 overflow-y-scroll">
@@ -133,8 +120,8 @@ const DataTable = ({
           </tr>
         </thead>
         <tbody>
-          {products &&
-            products.map((product: any) => (
+          {states.products &&
+            states.products.map((product: any) => (
               <tr
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 key={product.id}
@@ -148,7 +135,7 @@ const DataTable = ({
                 <td className="px-6 py-4">{product.code}</td>
                 <td className="px-6 py-4">
                   <img
-                    src={`http://localhost:3003/public/products/${product.mainFileUrl}`}
+                    src={`${REACT_APP_API_URL}/public/products/${product.mainFileUrl}`}
                     alt=""
                     className="w-16"
                   />
@@ -158,7 +145,7 @@ const DataTable = ({
                     {JSON.parse(product.childsFilesUrl).map((url: any) => (
                       <img
                         key={url}
-                        src={`http://localhost:3003/public/products/${url}`}
+                        src={`${REACT_APP_API_URL}/public/products/${url}`}
                         alt=""
                         className="w-16"
                       />
@@ -173,40 +160,14 @@ const DataTable = ({
                 <td className="px-6 py-4">{product.categoryCode}</td>
 
                 <td className="px-6 py-4 flex gap-x-2">
-                  {/* <UpdateModal
-                    setToggleData={setToggleData}
-                    category={{ id, name, code, bannerCode }}
-                  />
-                  <DeleteModal
-                    setToggleData={setToggleData}
-                    category={{ id, name, code, bannerCode }}
-                  /> */}
-                  <UpdateModal
-                    setToggleData={setToggleData}
-                    product={product}
-                  />
-                  <DeleteModal
-                    setToggleData={setToggleData}
-                    product={product}
-                  />
+                  <UpdateModal product={product} />
+                  <DeleteModal product={product} />
                 </td>
               </tr>
             ))}
         </tbody>
       </table>
-      <div className="my-12">
-        <ResponsivePagination
-          current={queryConfig.page}
-          total={totalPage}
-          onPageChange={(page) => {
-            setQueryConfig({
-              ...queryConfig,
-              page: page,
-            });
-          }}
-          maxWidth={300}
-        />
-      </div>
+
     </>
   );
 };
