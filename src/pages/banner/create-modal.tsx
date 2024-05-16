@@ -18,10 +18,6 @@ const CreateModal = () => {
   const onSubmit: SubmitHandler<IBanner> = async (data) => {
 
     const response = await bannerApi.AddBanner(data);
-    if (response == null) {
-      alert("action failed!");
-      return;
-    }
 
     reset();
     setToggle(false);

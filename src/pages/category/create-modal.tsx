@@ -49,10 +49,7 @@ const CreateModal = () => {
     }
 
     const response = await categoryApi.AddCategory(formData);
-    if (response == null) {
-      alert("action failed!");
-      return;
-    }
+
 
     reset();
     setToggle(false);

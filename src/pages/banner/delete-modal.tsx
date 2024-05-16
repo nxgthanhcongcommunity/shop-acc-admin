@@ -16,10 +16,7 @@ const DeleteModal = ({ banner }: Props) => {
   const onSubmit = async () => {
 
     const response = await bannerApi.DeleteBanner(banner);
-    if (response == null) {
-      alert("action failed!");
-      return;
-    }
+
 
     setToggle(false);
     reset();
