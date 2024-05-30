@@ -37,12 +37,11 @@ const router = createBrowserRouter(
           path: "accounts",
           element: <AccountPage />,
         },
-        //AccountPage
       ],
     },
   ],
   {
-    basename: "/shop-acc-admin",
+    basename: "/admin",
   }
 );
 
