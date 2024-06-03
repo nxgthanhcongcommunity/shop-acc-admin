@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import {
   AccountPage,
-  BannerPage,
   CategoryPage,
   HomePage,
   ProductPage,
@@ -20,10 +19,6 @@ const router = createBrowserRouter(
         {
           path: "signup",
           element: <SignupPage />,
-        },
-        {
-          path: "banners",
-          element: <BannerPage />,
         },
         {
           path: "categories",

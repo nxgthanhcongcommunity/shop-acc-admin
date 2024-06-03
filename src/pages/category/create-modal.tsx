@@ -4,7 +4,7 @@ import categoryApi from "../../api/categoryApi";
 import { AddIcon, PlusIcon } from "../../assets/icons";
 import { Button, FileUploader, InputField, Modal, SelectField } from "../../components";
 import { IBanner, ICategory } from "../../models";
-import { bannerApi } from "../../api";
+import { masterDataApi } from "../../api";
 
 const CreateModal = () => {
   const [toggle, setToggle] = useState(false);
@@ -16,14 +16,19 @@ const CreateModal = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await bannerApi.getBanners({});
+      const response = await masterDataApi.getByKey({
+        key: "home-page",
+      });
 
       if (response == null) {
         alert("action failed!");
         return;
       }
 
-      const { data: banners } = response;
+      const { banners } = response;
+
+      console.log(banners)
+
       setBanners(banners);
 
     })();

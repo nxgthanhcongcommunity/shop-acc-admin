@@ -99,7 +99,7 @@ const CreateModal = ({ setToggleData }: any) => {
             <InputField fieldName="Tên sản phẩm" field="name" register={register} errors={errors} />
           </div>
           <div>
-            <InputField fieldName="Mã sản phẩm" field="code" register={register} errors={errors} />
+            <InputField type="number" fieldName="Giá tiền" field="price" register={register} errors={errors} />
           </div>
           <div>
             <InputField fieldName="Server" field="server" register={register} errors={errors} />

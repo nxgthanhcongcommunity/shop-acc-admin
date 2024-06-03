@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { bannerApi, categoryApi } from "../../api";
+import { categoryApi, masterDataApi } from "../../api";
 import { EditIcon, SettingIcon } from "../../assets/icons";
 import { Button, InputField, Modal, SelectField } from "../../components";
 import { IBanner, ICategory } from "../../models";
@@ -15,14 +15,16 @@ const UpdateModal = ({ category }: Props) => {
   useEffect(() => {
     (async () => {
 
-      const response = await bannerApi.getBanners({});
+      const response = await masterDataApi.getByKey({
+        key: "home-page",
+      });
 
       if (response == null) {
         alert("action failed");
         return;
       }
 
-      setBanners(response.data);
+      setBanners(response.banners);
 
     })();
 

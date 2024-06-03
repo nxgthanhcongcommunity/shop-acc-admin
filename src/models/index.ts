@@ -3,10 +3,8 @@ interface IObjectKeys {
 }
 
 export interface IBanner {
-  id: number;
-  name: string;
   code: string;
-  order: number;
+  name: string;
 }
 
 export interface ICategory extends IObjectKeys {
