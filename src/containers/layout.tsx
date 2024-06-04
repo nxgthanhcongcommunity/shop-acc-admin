@@ -194,21 +194,21 @@ const Layout = () => {
                 <li>
                   <Link to={"/categories"}>
                     <span className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                      danh mục
+                      Loại sản phẩm
                     </span>
                   </Link>
                 </li>
                 <li>
                   <Link to={"/products"}>
                     <span className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                      sản phẩm
+                      Sản phẩm
                     </span>
                   </Link>
                 </li>
                 <li>
                   <Link to={"/accounts"}>
                     <span className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                      người dùng
+                      Người dùng
                     </span>
                   </Link>
                 </li>

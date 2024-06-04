@@ -5,16 +5,12 @@ import UpdateModal from "./update-modal";
 
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
-import categoryApi from "../../api/categoryApi";
-import { MicIcon } from "../../assets/icons";
-import { ICategory, IProduct } from "../../models";
 import productApi from "../../api/productApi";
+import { CdlImage, Search } from "../../components";
 import { useDebounce } from "../../hooks";
-import { Search } from "../../components";
 
 const DataTable = () => {
-
-  const { REACT_APP_API_URL } = process.env
+  const { REACT_APP_API_URL } = process.env;
 
   const [states, updateStates] = useState({
     products: [],
@@ -23,15 +19,13 @@ const DataTable = () => {
       page: 1,
       limit: 5,
       name: "",
-    }
-  })
+    },
+  });
 
   const debouncedName = useDebounce(states.queryConfig.name, 1000);
 
   useEffect(() => {
-
     (async () => {
-
       const response = await productApi.GetProducts(states.queryConfig);
       if (response == null) return;
 
@@ -39,24 +33,20 @@ const DataTable = () => {
       updateStates({
         ...states,
         products,
-        totalPage: Math.ceil(total / states.queryConfig.limit)
+        totalPage: Math.ceil(total / states.queryConfig.limit),
       });
-
     })();
-
   }, [states.queryConfig.page, debouncedName]);
 
   const handleSearchChange = (currentValue: string) => {
-
     updateStates({
       ...states,
       queryConfig: {
         ...states.queryConfig,
         page: 1,
-        name: currentValue
-      }
+        name: currentValue,
+      },
     });
-
   };
 
   return (
@@ -67,15 +57,13 @@ const DataTable = () => {
           current={states.queryConfig.page}
           total={states.totalPage}
           onPageChange={(page) => {
-
             updateStates({
               ...states,
               queryConfig: {
                 ...states.queryConfig,
                 page,
-              }
-            })
-
+              },
+            });
           }}
           maxWidth={300}
         />
@@ -134,22 +122,14 @@ const DataTable = () => {
                 </th>
                 <td className="px-6 py-4">{product.code}</td>
                 <td className="px-6 py-4">
-                  <img
-                    src={`${REACT_APP_API_URL}/public/products/${product.mainFileUrl}`}
-                    alt=""
-                    className="w-16"
-                  />
+                  <CdlImage w={60} h={60} id={product.mainFileCLDId} />
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex gap-x-1">
-                    {JSON.parse(product.childsFilesUrl).map((url: any) => (
-                      <img
-                        key={url}
-                        src={`${REACT_APP_API_URL}/public/products/${url}`}
-                        alt=""
-                        className="w-16"
-                      />
-                    ))}
+                    {product.childsFilesCLDId &&
+                      JSON.parse(product.childsFilesCLDId).map((id: string) => (
+                        <CdlImage w={60} h={60} id={id} />
+                      ))}
                   </div>
                 </td>
                 <td className="px-6 py-4">{product.server}</td>
@@ -167,7 +147,6 @@ const DataTable = () => {
             ))}
         </tbody>
       </table>
-
     </>
   );
 };

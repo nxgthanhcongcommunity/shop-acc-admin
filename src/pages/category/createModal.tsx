@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import categoryApi from "../../api/categoryApi";
 import { AddIcon, PlusIcon } from "../../assets/icons";
-import { Button, FileUploader, InputField, Modal, SelectField } from "../../components";
+import {
+  Button,
+  CdlImage,
+  FileUploader,
+  InputField,
+  Modal,
+  SelectField,
+} from "../../components";
 import { IBanner, ICategory } from "../../models";
 import { masterDataApi } from "../../api";
 
@@ -13,24 +20,13 @@ const CreateModal = () => {
 
   const [categoryMainFile, setCategoryMainFile] = useState<File | null>(null);
 
-
   useEffect(() => {
     (async () => {
       const response = await masterDataApi.getByKey({
         key: "home-page",
       });
-
-      if (response == null) {
-        alert("action failed!");
-        return;
-      }
-
       const { banners } = response;
-
-      console.log(banners)
-
       setBanners(banners);
-
     })();
   }, []);
 
@@ -42,7 +38,6 @@ const CreateModal = () => {
   } = useForm<ICategory>();
 
   const onSubmit: SubmitHandler<ICategory> = async (data) => {
-
     const formData = new FormData();
 
     if (categoryMainFile != null) {
@@ -50,15 +45,13 @@ const CreateModal = () => {
     }
 
     for (const property in data) {
-      formData.append(property, data[property].toString())
+      formData.append(property, data[property].toString());
     }
 
     const response = await categoryApi.AddCategory(formData);
 
-
     reset();
     setToggle(false);
-
   };
 
   const handleProductMainFileChange = (files: File[]) => {
@@ -87,10 +80,24 @@ const CreateModal = () => {
       >
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div>
-            <InputField field="name" register={register} errors={errors} />
+            <InputField
+              fieldName="Tên loại"
+              field="name"
+              register={register}
+              errors={errors}
+            />
+          </div>
+          <div>
+            <InputField
+              fieldName="Cloudiary Id"
+              field="mainFileCLDId"
+              register={register}
+              errors={errors}
+            />
           </div>
           <div>
             <SelectField
+              fieldName="Banner"
               field="bannerCode"
               items={banners?.map((banner) => ({
                 name: banner.name,
@@ -101,7 +108,11 @@ const CreateModal = () => {
             />
           </div>
           <div>
-            <FileUploader fieldName="Hình ảnh" id="category-file-uploader" onFileSelect={handleProductMainFileChange} />
+            <FileUploader
+              fieldName="Hình ảnh"
+              id="category-file-uploader"
+              onFileSelect={handleProductMainFileChange}
+            />
           </div>
         </div>
         <div className="flex justify-end gap-x-4">

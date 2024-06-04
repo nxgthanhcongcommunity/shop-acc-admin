@@ -5,12 +5,11 @@ import UpdateModal from "./update-modal";
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
 import categoryApi from "../../api/categoryApi";
-import { Search } from "../../components";
+import { CdlImage, Search } from "../../components";
 import { useDebounce } from "../../hooks";
 import { ICategory } from "../../models";
 
 const DataTable = () => {
-
   const [states, updateStates] = useState({
     categories: [],
     totalPage: 0,
@@ -18,40 +17,35 @@ const DataTable = () => {
       page: 1,
       limit: 5,
       name: "",
-    }
-  })
+    },
+  });
 
   const debouncedName = useDebounce(states.queryConfig.name, 1000);
 
   useEffect(() => {
-
     (async () => {
-
       const response = await categoryApi.GetCategories(states.queryConfig);
       if (response == null) return;
 
       const { total, data: categories } = response;
+
       updateStates({
         ...states,
         categories,
-        totalPage: Math.ceil(total / states.queryConfig.limit)
+        totalPage: Math.ceil(total / states.queryConfig.limit),
       });
-
     })();
-
   }, [states.queryConfig.page, debouncedName]);
 
   const handleSearchChange = (currentValue: string) => {
-
     updateStates({
       ...states,
       queryConfig: {
         ...states.queryConfig,
         page: 1,
-        name: currentValue
-      }
+        name: currentValue,
+      },
     });
-
   };
 
   return (
@@ -62,15 +56,13 @@ const DataTable = () => {
           current={states.queryConfig.page}
           total={states.totalPage}
           onPageChange={(page) => {
-
             updateStates({
               ...states,
               queryConfig: {
                 ...states.queryConfig,
                 page,
-              }
-            })
-
+              },
+            });
           }}
           maxWidth={300}
         />
@@ -80,43 +72,48 @@ const DataTable = () => {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Category name
+              Hình ảnh
             </th>
             <th scope="col" className="px-6 py-3">
-              Category code
+              Tên loại
             </th>
             <th scope="col" className="px-6 py-3">
-              Banner code
+              Mã
             </th>
             <th scope="col" className="px-6 py-3">
-              Action
+              Banner
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Thao tác
             </th>
           </tr>
         </thead>
         <tbody>
           {states.categories &&
-            states.categories.map(({ id, name, code, bannerCode }: ICategory) => (
+            states.categories.map((cate: ICategory) => (
               <tr
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                key={id}
+                key={cate.id}
               >
+                <td className="px-6 py-4">
+                  <CdlImage w={60} h={60} id={cate.mainFileCLDId} />
+                </td>
                 <th
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {name}
+                  {cate.name}
                 </th>
-                <td className="px-6 py-4">{code}</td>
-                <td className="px-6 py-4">{bannerCode}</td>
+                <td className="px-6 py-4">{cate.code}</td>
+                <td className="px-6 py-4">{cate.bannerCode}</td>
                 <td className="px-6 py-4 flex gap-x-2">
-                  <UpdateModal category={{ id, name, code, bannerCode }} />
-                  <DeleteModal category={{ id, name, code, bannerCode }} />
+                  <UpdateModal category={cate} />
+                  <DeleteModal category={cate} />
                 </td>
               </tr>
             ))}
         </tbody>
       </table>
-
     </>
   );
 };

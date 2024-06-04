@@ -1,6 +1,6 @@
 "use client";
 
-import CreateModal from "./create-modal";
+import CreateModal from "./createModal";
 
 import "react-responsive-pagination/themes/classic.css";
 import { Tab } from "../../components";
@@ -8,13 +8,12 @@ import { tabTitles } from "../../constants";
 import DataTable from "./data-table";
 
 export default function Component() {
-
-  const contents = [(
+  const contents = [
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
       <CreateModal />
       <DataTable />
-    </div>
-  )]
+    </div>,
+  ];
 
   return (
     <div className="bg-white dark:bg-gray-900">

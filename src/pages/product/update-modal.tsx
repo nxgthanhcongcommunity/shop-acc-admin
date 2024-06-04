@@ -16,8 +16,7 @@ type Props = {
   product: IProduct;
 };
 const UpdateModal = ({ product }: Props) => {
-
-  const { REACT_APP_API_URL } = process.env
+  const { REACT_APP_API_URL } = process.env;
 
   const [toggle, setToggle] = useState(false);
   const [categories, setCategories] = useState<IBanner[]>();
@@ -28,15 +27,14 @@ const UpdateModal = ({ product }: Props) => {
   const [productMainFile, setProductMainFile] = useState<File | null>(null);
 
   useEffect(() => {
-
     (async () => {
-
       const response = await categoryApi.GetCategories({});
-      if (response == null) { alert("action failed"); return; }
+      if (response == null) {
+        alert("action failed");
+        return;
+      }
       setCategories(response.data);
-
     })();
-
   }, []);
 
   const {
@@ -66,11 +64,13 @@ const UpdateModal = ({ product }: Props) => {
     }
 
     const response = await productApi.UpdateProduct(formData);
-    if (response == null) { alert("action failed"); return; }
+    if (response == null) {
+      alert("action failed");
+      return;
+    }
 
     reset();
     setToggle(false);
-
   };
 
   const handleProductChildFilesChange = (files: File[]) => {
@@ -187,14 +187,15 @@ const UpdateModal = ({ product }: Props) => {
           </div>
           <div className="col-span-3 grid grid-cols-2 gap-4">
             <div className="flex gap-2">
-              {JSON.parse(product.childsFilesUrl).map((url: any) => (
-                <img
-                  key={url}
-                  src={`${REACT_APP_API_URL}/public/products/${url}`}
-                  alt=""
-                  className="w-28 object-cover"
-                />
-              ))}
+              {product.childsFilesUrl &&
+                JSON.parse(product.childsFilesUrl).map((url: any) => (
+                  <img
+                    key={url}
+                    src={`${REACT_APP_API_URL}/public/products/${url}`}
+                    alt=""
+                    className="w-28 object-cover"
+                  />
+                ))}
             </div>
             <div className="grid place-content-center">
               <img

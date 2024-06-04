@@ -3,21 +3,27 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { categoryApi } from "../../api";
 import productApi from "../../api/productApi";
 import { AddIcon, PlusIcon } from "../../assets/icons";
-import { Button, FileUploader, InputField, Modal, SelectField } from "../../components";
+import {
+  Button,
+  FileUploader,
+  InputField,
+  Modal,
+  SelectField,
+  TextareaField,
+} from "../../components";
 import { ICategory, IProduct } from "../../models";
 
 const CreateModal = ({ setToggleData }: any) => {
-
-  const [productChildFiles, setProductChildFiles] = useState<File[] | null>(null);
+  const [productChildFiles, setProductChildFiles] = useState<File[] | null>(
+    null
+  );
   const [productMainFile, setProductMainFile] = useState<File | null>(null);
 
   const [toggle, setToggle] = useState(false);
   const [categories, setCategories] = useState<ICategory[]>();
 
   useEffect(() => {
-
     (async () => {
-
       const response = await categoryApi.GetCategories({});
       if (response == null) {
         alert("action failed");
@@ -25,9 +31,7 @@ const CreateModal = ({ setToggleData }: any) => {
       }
 
       setCategories(response.data);
-
     })();
-
   }, []);
 
   const {
@@ -38,8 +42,14 @@ const CreateModal = ({ setToggleData }: any) => {
   } = useForm<IProduct>();
 
   const onSubmit: SubmitHandler<IProduct> = async (data) => {
+    console.log(data);
 
     const formData = new FormData();
+
+    const arrId = data.childsFilesCLDId.split("\n");
+    const arrIdTrimed = arrId.map((item) => item.trim());
+
+    data.childsFilesCLDId = JSON.stringify(arrIdTrimed);
 
     if (productChildFiles != null) {
       [...productChildFiles].forEach((file, index) => {
@@ -52,7 +62,7 @@ const CreateModal = ({ setToggleData }: any) => {
     }
 
     for (const property in data) {
-      formData.append(property, data[property].toString())
+      formData.append(property, data[property].toString());
     }
 
     const response = await productApi.AddProduct(formData);
@@ -63,7 +73,6 @@ const CreateModal = ({ setToggleData }: any) => {
 
     reset();
     setToggle(false);
-
   };
 
   const handleProductChildFilesChange = (files: File[]) => {
@@ -96,19 +105,55 @@ const CreateModal = ({ setToggleData }: any) => {
       >
         <div className="grid gap-4 mb-4 grid-cols-3">
           <div>
-            <InputField fieldName="Tên sản phẩm" field="name" register={register} errors={errors} />
+            <InputField
+              fieldName="Tên sản phẩm"
+              field="name"
+              register={register}
+              errors={errors}
+            />
           </div>
           <div>
-            <InputField type="number" fieldName="Giá tiền" field="price" register={register} errors={errors} />
+            <InputField
+              type="number"
+              fieldName="Giá tiền"
+              field="price"
+              register={register}
+              errors={errors}
+            />
           </div>
           <div>
-            <InputField fieldName="Server" field="server" register={register} errors={errors} />
+            <InputField
+              type="number"
+              fieldName="Số lượng"
+              field="currentQuantity"
+              register={register}
+              errors={errors}
+              defaultValue={1}
+            />
+          </div>
+          <div>
+            <SelectField
+              fieldName="Server"
+              field="server"
+              items={[
+                { name: "VietNam", code: "VietNam" },
+                { name: "ChauAu", code: "ChauAu" },
+              ].map(({ name, code }) => ({
+                name: name,
+                value: code,
+              }))}
+              register={register}
+              errors={errors}
+            />
           </div>
           <div>
             <SelectField
               fieldName="Đăng nhập"
               field="loginType"
-              items={[{ name: 'Google', code: 'google' }, { name: 'Facebook', code: 'facebook' }].map(({ name, code }) => ({
+              items={[
+                { name: "Google", code: "google" },
+                { name: "Facebook", code: "facebook" },
+              ].map(({ name, code }) => ({
                 name: name,
                 value: code,
               }))}
@@ -121,7 +166,10 @@ const CreateModal = ({ setToggleData }: any) => {
               <SelectField
                 fieldName="Hệ điều hành"
                 field="operatingSystem"
-                items={[{ name: 'Android', code: 'android' }, { name: 'IOS', code: 'ios' }].map(({ name, code }) => ({
+                items={[
+                  { name: "Android", code: "android" },
+                  { name: "IOS", code: "ios" },
+                ].map(({ name, code }) => ({
                   name: name,
                   value: code,
                 }))}
@@ -131,10 +179,20 @@ const CreateModal = ({ setToggleData }: any) => {
             </div>
           </div>
           <div>
-            <InputField fieldName="Gem/Chono" field="gemChono" register={register} errors={errors} />
+            <InputField
+              fieldName="Gem/Chono"
+              field="gemChono"
+              register={register}
+              errors={errors}
+            />
           </div>
           <div>
-            <InputField fieldName="Mô tả" field="descriptions" register={register} errors={errors} />
+            <InputField
+              fieldName="Mô tả"
+              field="descriptions"
+              register={register}
+              errors={errors}
+            />
           </div>
           <div>
             <SelectField
@@ -148,9 +206,37 @@ const CreateModal = ({ setToggleData }: any) => {
               errors={errors}
             />
           </div>
+
           <div className="col-span-3 grid grid-cols-2 gap-4">
-            <FileUploader fieldName="Các hình ảnh con" id="file-uploader-1" onFileSelect={handleProductChildFilesChange} multiple />
-            <FileUploader fieldName="Hình ảnh chính" id="file-uploader-2" onFileSelect={handleProductMainFileChange} />
+            <div>
+              <TextareaField
+                fieldName="Id các hình ảnh con"
+                field="childsFilesCLDId"
+                register={register}
+                errors={errors}
+              />
+            </div>
+            <div>
+              <InputField
+                fieldName="Id ảnh chính"
+                field="mainFileCLDId"
+                register={register}
+                errors={errors}
+              />
+            </div>
+          </div>
+          <div className="col-span-3 grid grid-cols-2 gap-4">
+            <FileUploader
+              fieldName="Các hình ảnh con"
+              id="file-uploader-1"
+              onFileSelect={handleProductChildFilesChange}
+              multiple
+            />
+            <FileUploader
+              fieldName="Hình ảnh chính"
+              id="file-uploader-2"
+              onFileSelect={handleProductMainFileChange}
+            />
           </div>
         </div>
         <div className="flex justify-end gap-x-4">

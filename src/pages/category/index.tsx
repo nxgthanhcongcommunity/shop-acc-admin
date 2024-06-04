@@ -1,22 +1,19 @@
 "use client";
 
-import CreateModal from "./create-modal";
+import CreateModal from "./createModal";
 
 import "react-responsive-pagination/themes/classic.css";
 import { Tab } from "../../components";
 import { tabTitles } from "../../constants";
-import DataTable from "./data-table";
+import DataTable from "./dataTable";
 
-export default function Component() {
-
+export default function Category() {
   const contents = [
-    (
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
-        <CreateModal />
-        <DataTable />
-      </div>
-    ),
-  ]
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
+      <CreateModal />
+      <DataTable />
+    </div>,
+  ];
 
   return (
     <div className="bg-white dark:bg-gray-900">

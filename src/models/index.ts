@@ -1,5 +1,5 @@
 interface IObjectKeys {
-  [key: string]: string | number,
+  [key: string]: string | number;
 }
 
 export interface IBanner {
@@ -12,21 +12,22 @@ export interface ICategory extends IObjectKeys {
   name: string;
   code: string;
   bannerCode: string;
+  mainFileCLDId: string;
 }
 
 export interface IProduct extends IObjectKeys {
-  name: string,
-  mainFileUrl: string,
-  mainFileCLDId: string,
-  childsFilesUrl: string,
-  childsFilesCLDId: string,
-  code: string,
-  server: string,
-  loginType: string,
-  operatingSystem: string,
-  gemChono: string,
-  descriptions: string,
-  categoryCode: string,
+  name: string;
+  mainFileUrl: string;
+  mainFileCLDId: string;
+  childsFilesUrl: string;
+  childsFilesCLDId: string;
+  code: string;
+  server: string;
+  loginType: string;
+  operatingSystem: string;
+  gemChono: string;
+  descriptions: string;
+  categoryCode: string;
 }
 
 export interface IAccount {

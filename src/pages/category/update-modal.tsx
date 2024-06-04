@@ -14,7 +14,6 @@ const UpdateModal = ({ category }: Props) => {
 
   useEffect(() => {
     (async () => {
-
       const response = await masterDataApi.getByKey({
         key: "home-page",
       });
@@ -25,9 +24,7 @@ const UpdateModal = ({ category }: Props) => {
       }
 
       setBanners(response.banners);
-
     })();
-
   }, []);
 
   const {
@@ -43,12 +40,12 @@ const UpdateModal = ({ category }: Props) => {
     const response = await categoryApi.UpdateCategory(data);
 
     if (response == null) {
-      alert("action failed"); return;
+      alert("action failed");
+      return;
     }
 
     reset();
     setToggle(false);
-
   };
 
   return banners ? (
@@ -71,13 +68,31 @@ const UpdateModal = ({ category }: Props) => {
         handleSubmit={handleSubmit(onSubmit)}
       >
         <div className="grid gap-4 mb-4 grid-cols-2">
-          <div className="col-span-2">
-            <InputField field="name" register={register} errors={errors} />
+          <div>
+            <InputField
+              fieldName="Tên loại"
+              field="name"
+              register={register}
+              errors={errors}
+            />
           </div>
-          <div className="col-span-2">
-            <InputField field="code" register={register} errors={errors} />
+          <div>
+            <InputField
+              fieldName="Banner"
+              field="code"
+              register={register}
+              errors={errors}
+            />
           </div>
-          <div className="col-span-2">
+          <div>
+            <InputField
+              fieldName="Cloudiary Id"
+              field="mainFileCLDId"
+              register={register}
+              errors={errors}
+            />
+          </div>
+          <div>
             <SelectField
               field="bannerCode"
               items={banners?.map((banner) => ({
