@@ -1,30 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { v4 as uuidv4 } from 'uuid';
 import { categoryApi } from "../../api";
 import productApi from "../../api/productApi";
 import { EditIcon, SettingIcon } from "../../assets/icons";
 import {
   Button,
-  FileUploader,
   InputField,
   Modal,
-  SelectField,
+  MultiInputsField,
+  SelectField
 } from "../../components";
+import { MultiInputsFieldRef } from "../../components/multi-inputs-field";
 import { IBanner, IProduct } from "../../models";
 
 type Props = {
   product: IProduct;
 };
+
 const UpdateModal = ({ product }: Props) => {
-  const { REACT_APP_API_URL } = process.env;
 
   const [toggle, setToggle] = useState(false);
   const [categories, setCategories] = useState<IBanner[]>();
 
-  const [productChildFiles, setProductChildFiles] = useState<File[] | null>(
-    null
-  );
-  const [productMainFile, setProductMainFile] = useState<File | null>(null);
+  const multiInputsFieldRef = useRef<MultiInputsFieldRef>(null);
+
+  let initialItems = null;
+  try {
+    initialItems = JSON.parse(product.childsFilesCLDId).map((item: string) => {
+      return {
+        id: uuidv4(),
+        value: item,
+      }
+    })
+  } catch {
+
+  }
+
+  const handleGetItems = () => {
+    if (multiInputsFieldRef.current) {
+      const items = multiInputsFieldRef.current.getItems();
+      return items.filter(item => ("" + item).length > 0);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -47,38 +65,15 @@ const UpdateModal = ({ product }: Props) => {
   });
 
   const onSubmit: SubmitHandler<IProduct> = async (data) => {
-    const formData = new FormData();
 
-    if (productChildFiles != null) {
-      [...productChildFiles].forEach((file, index) => {
-        formData.append(`child-files`, file, file.name);
-      });
-    }
+    const multiInputItems = handleGetItems();
+    data.childsFilesCLDId = JSON.stringify(multiInputItems);
 
-    if (productMainFile != null) {
-      formData.append(`main-file`, productMainFile, productMainFile.name);
-    }
-
-    for (const property in data) {
-      formData.append(property, data[property].toString());
-    }
-
-    const response = await productApi.UpdateProduct(formData);
-    if (response == null) {
-      alert("action failed");
-      return;
-    }
+    const response = await productApi.UpdateProduct(data);
 
     reset();
     setToggle(false);
-  };
 
-  const handleProductChildFilesChange = (files: File[]) => {
-    setProductChildFiles(files);
-  };
-
-  const handleProductMainFileChange = (files: File[]) => {
-    setProductMainFile(files[0]);
   };
 
   return categories ? (
@@ -111,10 +106,21 @@ const UpdateModal = ({ product }: Props) => {
           </div>
           <div>
             <InputField
-              fieldName="Mã sản phẩm"
-              field="code"
+              type="number"
+              fieldName="Giá tiền"
+              field="price"
               register={register}
               errors={errors}
+            />
+          </div>
+          <div>
+            <InputField
+              type="number"
+              fieldName="Số lượng"
+              field="currentQuantity"
+              register={register}
+              errors={errors}
+              defaultValue={1}
             />
           </div>
           <div>
@@ -177,7 +183,7 @@ const UpdateModal = ({ product }: Props) => {
             <SelectField
               fieldName="Loại"
               field="categoryCode"
-              items={categories?.map(({ name, code }) => ({
+              items={categories && categories.map(({ name, code }) => ({
                 name: name,
                 value: code,
               }))}
@@ -185,39 +191,21 @@ const UpdateModal = ({ product }: Props) => {
               errors={errors}
             />
           </div>
+
           <div className="col-span-3 grid grid-cols-2 gap-4">
-            <div className="flex gap-2">
-              {product.childsFilesUrl &&
-                JSON.parse(product.childsFilesUrl).map((url: any) => (
-                  <img
-                    key={url}
-                    src={`${REACT_APP_API_URL}/public/products/${url}`}
-                    alt=""
-                    className="w-28 object-cover"
-                  />
-                ))}
+            <div>
+              <MultiInputsField ref={multiInputsFieldRef} initialItems={initialItems} />
             </div>
-            <div className="grid place-content-center">
-              <img
-                src={`${REACT_APP_API_URL}/public/products/${product.mainFileUrl}`}
-                alt=""
-                className="w-32"
+            <div>
+              <InputField
+                fieldName="Id ảnh chính"
+                field="mainFileCLDId"
+                register={register}
+                errors={errors}
               />
             </div>
           </div>
-          <div className="col-span-3 grid grid-cols-2 gap-4">
-            <FileUploader
-              fieldName="Hình ảnh con"
-              id="update-file-uploader-1"
-              onFileSelect={handleProductChildFilesChange}
-              multiple
-            />
-            <FileUploader
-              fieldName="Hình ảnh chính"
-              id="update-file-uploader-2"
-              onFileSelect={handleProductMainFileChange}
-            />
-          </div>
+
         </div>
         <div className="flex justify-end gap-x-4">
           <Button skin="alter" onClick={() => setToggle((prev) => !prev)}>

@@ -3,7 +3,7 @@ import { tabTitles } from "../../constants";
 import { TabContainer } from "../../containers";
 import DataTable from "./dataTable";
 
-export default function Account() {
+export default function Balance() {
 
   const contents = [
     (

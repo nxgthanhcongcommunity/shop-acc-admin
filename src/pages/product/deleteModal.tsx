@@ -9,20 +9,14 @@ type Props = {
   product: IProduct;
 };
 const DeleteModal = ({ product }: Props) => {
-  const [toggle, setToggle] = useState(false);
 
+  const [toggle, setToggle] = useState(false);
   const { handleSubmit, reset } = useForm();
 
   const onSubmit = async () => {
 
     const response = await productApi.DeleteProduct(product);
-    if (response == null) {
-      alert("action failed");
-      return;
-    }
-
     reset();
-    setToggle(false);
 
   };
 

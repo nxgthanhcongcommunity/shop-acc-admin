@@ -1,26 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { categoryApi } from "../../api";
 import productApi from "../../api/productApi";
 import { AddIcon, PlusIcon } from "../../assets/icons";
 import {
   Button,
-  FileUploader,
   InputField,
   Modal,
-  SelectField,
-  TextareaField,
+  MultiInputsField,
+  SelectField
 } from "../../components";
+import { MultiInputsFieldRef } from "../../components/multi-inputs-field";
 import { ICategory, IProduct } from "../../models";
 
-const CreateModal = ({ setToggleData }: any) => {
-  const [productChildFiles, setProductChildFiles] = useState<File[] | null>(
-    null
-  );
-  const [productMainFile, setProductMainFile] = useState<File | null>(null);
+const CreateModal = () => {
 
   const [toggle, setToggle] = useState(false);
+
   const [categories, setCategories] = useState<ICategory[]>();
+  const multiInputsFieldRef = useRef<MultiInputsFieldRef>(null);
+
+  const handleGetItems = () => {
+    if (multiInputsFieldRef.current) {
+      const items = multiInputsFieldRef.current.getItems();
+      return items.filter(item => ("" + item).length > 0);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -42,45 +47,11 @@ const CreateModal = ({ setToggleData }: any) => {
   } = useForm<IProduct>();
 
   const onSubmit: SubmitHandler<IProduct> = async (data) => {
-    console.log(data);
+    const multiInputItems = handleGetItems();
+    data.childsFilesCLDId = JSON.stringify(multiInputItems);
 
-    const formData = new FormData();
-
-    const arrId = data.childsFilesCLDId.split("\n");
-    const arrIdTrimed = arrId.map((item) => item.trim());
-
-    data.childsFilesCLDId = JSON.stringify(arrIdTrimed);
-
-    if (productChildFiles != null) {
-      [...productChildFiles].forEach((file, index) => {
-        formData.append(`child-files`, file, file.name);
-      });
-    }
-
-    if (productMainFile != null) {
-      formData.append(`main-file`, productMainFile, productMainFile.name);
-    }
-
-    for (const property in data) {
-      formData.append(property, data[property].toString());
-    }
-
-    const response = await productApi.AddProduct(formData);
-    if (response == null) {
-      alert("action failed");
-      return;
-    }
-
+    const response = await productApi.AddProduct(data);
     reset();
-    setToggle(false);
-  };
-
-  const handleProductChildFilesChange = (files: File[]) => {
-    setProductChildFiles(files);
-  };
-
-  const handleProductMainFileChange = (files: File[]) => {
-    setProductMainFile(files[0]);
   };
 
   return (
@@ -209,12 +180,7 @@ const CreateModal = ({ setToggleData }: any) => {
 
           <div className="col-span-3 grid grid-cols-2 gap-4">
             <div>
-              <TextareaField
-                fieldName="Id các hình ảnh con"
-                field="childsFilesCLDId"
-                register={register}
-                errors={errors}
-              />
+              <MultiInputsField ref={multiInputsFieldRef} />
             </div>
             <div>
               <InputField
@@ -224,19 +190,6 @@ const CreateModal = ({ setToggleData }: any) => {
                 errors={errors}
               />
             </div>
-          </div>
-          <div className="col-span-3 grid grid-cols-2 gap-4">
-            <FileUploader
-              fieldName="Các hình ảnh con"
-              id="file-uploader-1"
-              onFileSelect={handleProductChildFilesChange}
-              multiple
-            />
-            <FileUploader
-              fieldName="Hình ảnh chính"
-              id="file-uploader-2"
-              onFileSelect={handleProductMainFileChange}
-            />
           </div>
         </div>
         <div className="flex justify-end gap-x-4">

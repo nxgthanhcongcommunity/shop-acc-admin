@@ -1,33 +1,29 @@
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { masterDataApi } from "../../api";
 import categoryApi from "../../api/categoryApi";
 import { AddIcon, PlusIcon } from "../../assets/icons";
 import {
   Button,
-  CdlImage,
-  FileUploader,
   InputField,
   Modal,
-  SelectField,
+  SelectField
 } from "../../components";
 import { IBanner, ICategory } from "../../models";
-import { masterDataApi } from "../../api";
 
 const CreateModal = () => {
   const [toggle, setToggle] = useState(false);
-
   const [banners, setBanners] = useState<IBanner[]>();
 
-  const [categoryMainFile, setCategoryMainFile] = useState<File | null>(null);
-
   useEffect(() => {
+
     (async () => {
       const response = await masterDataApi.getByKey({
         key: "home-page",
       });
-      const { banners } = response;
-      setBanners(banners);
+      setBanners(response.banners);
     })();
+
   }, []);
 
   const {
@@ -38,29 +34,16 @@ const CreateModal = () => {
   } = useForm<ICategory>();
 
   const onSubmit: SubmitHandler<ICategory> = async (data) => {
-    const formData = new FormData();
+    const response = await categoryApi.AddCategory(data);
 
-    if (categoryMainFile != null) {
-      formData.append(`main-file`, categoryMainFile, categoryMainFile.name);
-    }
-
-    for (const property in data) {
-      formData.append(property, data[property].toString());
-    }
-
-    const response = await categoryApi.AddCategory(formData);
+    console.log(response)
 
     reset();
-    setToggle(false);
-  };
-
-  const handleProductMainFileChange = (files: File[]) => {
-    setCategoryMainFile(files[0]);
   };
 
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex justify-end mb-4">
         <Button
           onClick={() => setToggle((prev) => !prev)}
           data-modal-target="crud-modal"
@@ -78,7 +61,7 @@ const CreateModal = () => {
         errors={errors}
         handleSubmit={handleSubmit(onSubmit)}
       >
-        <div className="grid gap-4 mb-4 grid-cols-2">
+        <div className="grid gap-4 mb-4 grid-cols-3">
           <div>
             <InputField
               fieldName="Tên loại"
@@ -105,13 +88,6 @@ const CreateModal = () => {
               }))}
               register={register}
               errors={errors}
-            />
-          </div>
-          <div>
-            <FileUploader
-              fieldName="Hình ảnh"
-              id="category-file-uploader"
-              onFileSelect={handleProductMainFileChange}
             />
           </div>
         </div>

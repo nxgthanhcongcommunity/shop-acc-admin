@@ -8,4 +8,5 @@ export { default as Tab } from "./tab";
 export { default as Search } from "./search";
 export { default as CdlImage } from "./cdl-image";
 export { default as TextareaField } from "./textarea-field";
-//CdlImage
+export { default as MultiInputsField } from "./multi-inputs-field";
+//MultiInputsField

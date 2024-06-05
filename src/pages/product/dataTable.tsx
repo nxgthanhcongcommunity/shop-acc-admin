@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import DeleteModal from "./delete-modal";
-import UpdateModal from "./update-modal";
+import DeleteModal from "./deleteModal";
+import UpdateModal from "./updateModal";
 
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";

@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
-import { accountApi } from "../../api";
+import { sendmailApi } from "../../api";
 import { Search } from "../../components";
-import { IAccount } from "../../models";
 import { useDebounce } from "../../hooks";
 
 const DataTable = () => {
 
   const [states, updateStates] = useState({
-    accounts: [],
+    sendmails: [],
     totalPage: 0,
     queryConfig: {
       page: 1,
@@ -25,13 +24,14 @@ const DataTable = () => {
 
     (async () => {
 
-      const response = await accountApi.GetAccounts(states.queryConfig);
+      const response = await sendmailApi.Get(states.queryConfig);
       if (response == null) return;
 
-      const { total, data: accounts } = response;
+
+      const { total, data: sendmails } = response;
       updateStates({
         ...states,
-        accounts: accounts,
+        sendmails: sendmails,
         totalPage: Math.ceil(total / states.queryConfig.limit)
       });
 
@@ -77,42 +77,36 @@ const DataTable = () => {
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4 overflow-y-scroll">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" className="px-6 py-3">Email</th>
-            <th scope="col" className="px-6 py-3">photo</th>
-            <th scope="col" className="px-6 py-3">familyName</th>
-            <th scope="col" className="px-6 py-3">givenName</th>
-            <th scope="col" className="px-6 py-3">idAtProvider</th>
-            <th scope="col" className="px-6 py-3">isVerifyEmail</th>
-            <th scope="col" className="px-6 py-3">providerName</th>
-            <th scope="col" className="px-6 py-3">role</th>
+            <th scope="col" className="px-6 py-3">from</th>
+            <th scope="col" className="px-6 py-3">to</th>
+            <th scope="col" className="px-6 py-3">subject</th>
+            <th scope="col" className="px-6 py-3">text</th>
+            <th scope="col" className="px-6 py-3">attempTimes</th>
+            <th scope="col" className="px-6 py-3">succeed</th>
+            <th scope="col" className="px-6 py-3">createdAt</th>
+            <th scope="col" className="px-6 py-3">updatedAt</th>
           </tr>
         </thead>
         <tbody>
-          {states.accounts &&
-            states.accounts.map((account: IAccount) => (
+          {states.sendmails &&
+            states.sendmails.map((sendmail: any, index: number) => (
               <tr
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                key={account.id}
+                key={sendmail.id}
+                className={`bg-white ${index === states.sendmails.length - 1 ? '' : 'border-b'} dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600`}
               >
+                <td className="px-6 py-4">{sendmail.from}</td>
                 <th
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {account.email}
+                  {sendmail.to}
                 </th>
-                <td className="px-6 py-4">
-                  <img
-                    src={account.photo}
-                    alt=""
-                    className="w-16"
-                  />
-                </td>
-                <td className="px-6 py-4">{account.familyName}</td>
-                <td className="px-6 py-4">{account.givenName}</td>
-                <td className="px-6 py-4">{account.idAtProvider}</td>
-                <td className="px-6 py-4">{account.isVerifyEmail}</td>
-                <td className="px-6 py-4">{account.providerName}</td>
-                <td className="px-6 py-4">{account.role}</td>
+                <td className="px-6 py-4">{sendmail.subject}</td>
+                <td className="px-6 py-4">{sendmail.text}</td>
+                <td className="px-6 py-4">{+sendmail.attempTimes}</td>
+                <td className="px-6 py-4">{sendmail.succeed}</td>
+                <td className="px-6 py-4">{sendmail.createdAt}</td>
+                <td className="px-6 py-4">{sendmail.updatedAt}</td>
               </tr>
             ))}
         </tbody>

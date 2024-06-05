@@ -78,14 +78,6 @@ const UpdateModal = ({ category }: Props) => {
           </div>
           <div>
             <InputField
-              fieldName="Banner"
-              field="code"
-              register={register}
-              errors={errors}
-            />
-          </div>
-          <div>
-            <InputField
               fieldName="Cloudiary Id"
               field="mainFileCLDId"
               register={register}

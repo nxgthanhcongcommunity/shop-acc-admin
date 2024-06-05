@@ -2,10 +2,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import {
   AccountPage,
+  BalancePage,
   CategoryPage,
-  HomePage,
+  InvoiceDetailsPage,
+  InvoicePage,
   ProductPage,
-  SignupPage,
+  QuantityPage,
+  SendMailPage,
+  TransactionPage,
 } from "./pages";
 import { Layout } from "./containers";
 
@@ -15,12 +19,8 @@ const router = createBrowserRouter(
       path: "/",
       element: <Layout />,
       children: [
-        { index: true, element: <HomePage /> },
         {
-          path: "signup",
-          element: <SignupPage />,
-        },
-        {
+          index: true,
           path: "categories",
           element: <CategoryPage />,
         },
@@ -32,6 +32,31 @@ const router = createBrowserRouter(
           path: "accounts",
           element: <AccountPage />,
         },
+        {
+          path: "balances",
+          element: <BalancePage />,
+        },
+        {
+          path: "invoices",
+          element: <InvoicePage />
+        },
+        {
+          path: "invoice-details",
+          element: <InvoiceDetailsPage />,
+        },
+        {
+          path: "quantities",
+          element: <QuantityPage />,
+        },
+        {
+          path: "sendmails",
+          element: <SendMailPage />,
+        },
+        {
+          path: "transactions",
+          element: <TransactionPage />,
+        },
+        //TransactionPage
       ],
     },
   ],
