@@ -46,12 +46,10 @@ const UpdateModal = ({ product }: Props) => {
 
   useEffect(() => {
     (async () => {
-      const response = await categoryApi.GetCategories({});
-      if (response == null) {
-        alert("action failed");
-        return;
-      }
-      setCategories(response.data);
+      const { succeed, data } = await categoryApi.GetCategories({});
+      if (!succeed) return;
+
+      setCategories(data.data);
     })();
   }, []);
 

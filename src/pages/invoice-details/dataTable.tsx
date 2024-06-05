@@ -24,11 +24,10 @@ const DataTable = () => {
 
     (async () => {
 
-      const response = await invoiceDetailsApi.Get(states.queryConfig);
-      if (response == null) return;
+      const { succeed, data } = await invoiceDetailsApi.Get(states.queryConfig);
+      if (!succeed) return;
 
-
-      const { total, data: invoiceDetails } = response;
+      const { total, data: invoiceDetails } = data;
       updateStates({
         ...states,
         invoiceDetails: invoiceDetails,

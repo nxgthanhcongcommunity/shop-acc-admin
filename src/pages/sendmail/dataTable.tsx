@@ -24,11 +24,11 @@ const DataTable = () => {
 
     (async () => {
 
-      const response = await sendmailApi.Get(states.queryConfig);
-      if (response == null) return;
+      const { succeed, data } = await sendmailApi.Get(states.queryConfig);
+      if (!succeed) return;
 
+      const { total, data: sendmails } = data;
 
-      const { total, data: sendmails } = response;
       updateStates({
         ...states,
         sendmails: sendmails,

@@ -25,11 +25,10 @@ const DataTable = () => {
 
     (async () => {
 
-      const response = await balanceApi.Get(states.queryConfig);
-      if (response == null) return;
+      const { succeed, data } = await balanceApi.Get(states.queryConfig);
+      if (!succeed) return;
 
-
-      const { total, data: balances } = response;
+      const { total, data: balances } = data;
       updateStates({
         ...states,
         balances: balances,

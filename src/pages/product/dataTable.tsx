@@ -26,10 +26,10 @@ const DataTable = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await productApi.GetProducts(states.queryConfig);
-      if (response == null) return;
+      const { succeed, data } = await productApi.GetProducts(states.queryConfig);
+      if (!succeed) return;
 
-      const { total, data: products } = response;
+      const { total, data: products } = data;
       updateStates({
         ...states,
         products,

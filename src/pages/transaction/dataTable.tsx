@@ -24,11 +24,10 @@ const DataTable = () => {
 
     (async () => {
 
-      const response = await transactionApi.Get(states.queryConfig);
-      if (response == null) return;
+      const { succeed, data } = await transactionApi.Get(states.queryConfig);
+      if (!succeed) return;
 
-
-      const { total, data: transactions } = response;
+      const { total, data: transactions } = data;
       updateStates({
         ...states,
         transactions: transactions,
@@ -37,7 +36,7 @@ const DataTable = () => {
 
     })();
 
-  }, [states.queryConfig.page, debouncedName]);
+  }, [states, states.queryConfig.page, debouncedName]);
 
   const handleSearchChange = (currentValue: string) => {
 

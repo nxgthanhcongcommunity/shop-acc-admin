@@ -24,10 +24,10 @@ const DataTable = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await categoryApi.GetCategories(states.queryConfig);
-      if (response == null) return;
+      const { succeed, data } = await categoryApi.GetCategories(states.queryConfig);
+      if (!succeed) return;
 
-      const { total, data: categories } = response;
+      const { total, data: categories } = data;
 
       updateStates({
         ...states,

@@ -24,11 +24,10 @@ const DataTable = () => {
 
     (async () => {
 
-      const response = await quantityApi.Get(states.queryConfig);
-      if (response == null) return;
+      const { succeed, data } = await quantityApi.Get(states.queryConfig);
+      if (!succeed) return;
 
-
-      const { total, data: quantities } = response;
+      const { total, data: quantities } = data;
       updateStates({
         ...states,
         quantities: quantities,

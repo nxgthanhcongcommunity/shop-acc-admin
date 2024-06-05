@@ -29,13 +29,10 @@ const CreateModal = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await categoryApi.GetCategories({});
-      if (response == null) {
-        alert("action failed");
-        return;
-      }
+      const { succeed, data } = await categoryApi.GetCategories({});
+      if (!succeed) return;
 
-      setCategories(response.data);
+      setCategories(data.data);
     })();
   }, []);
 

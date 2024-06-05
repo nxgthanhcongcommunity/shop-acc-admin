@@ -18,10 +18,12 @@ const CreateModal = () => {
   useEffect(() => {
 
     (async () => {
-      const response = await masterDataApi.getByKey({
+      const { succeed, data } = await masterDataApi.getByKey({
         key: "home-page",
       });
-      setBanners(response.banners);
+
+      if (!succeed) return;
+      setBanners(data.banners);
     })();
 
   }, []);

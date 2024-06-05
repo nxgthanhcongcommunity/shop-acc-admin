@@ -9,21 +9,20 @@ type Props = {
   category: ICategory;
 };
 const UpdateModal = ({ category }: Props) => {
+
   const [toggle, setToggle] = useState(false);
   const [banners, setBanners] = useState<IBanner[]>();
 
   useEffect(() => {
     (async () => {
-      const response = await masterDataApi.getByKey({
+      const { succeed, data } = await masterDataApi.getByKey({
         key: "home-page",
       });
 
-      if (response == null) {
-        alert("action failed");
-        return;
-      }
+      if (!succeed) return;
 
-      setBanners(response.banners);
+      setBanners(data.banners);
+
     })();
   }, []);
 
@@ -39,10 +38,7 @@ const UpdateModal = ({ category }: Props) => {
   const onSubmit: SubmitHandler<ICategory> = async (data) => {
     const response = await categoryApi.UpdateCategory(data);
 
-    if (response == null) {
-      alert("action failed");
-      return;
-    }
+    console.log(response);
 
     reset();
     setToggle(false);
