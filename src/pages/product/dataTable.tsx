@@ -10,8 +10,6 @@ import { CdlImage, Search } from "../../components";
 import { useDebounce } from "../../hooks";
 
 const DataTable = () => {
-  const { REACT_APP_API_URL } = process.env;
-
   const [states, updateStates] = useState({
     products: [],
     totalPage: 0,
@@ -100,7 +98,10 @@ const DataTable = () => {
               descriptions
             </th>
             <th scope="col" className="px-6 py-3">
-              categoryCode
+              category
+            </th>
+            <th scope="col" className="px-6 py-3">
+              quantity
             </th>
             <th scope="col" className="px-6 py-3">
               Action
@@ -109,9 +110,9 @@ const DataTable = () => {
         </thead>
         <tbody>
           {states.products &&
-            states.products.map((product: any) => (
+            states.products.map((product: any, index: number) => (
               <tr
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                className={`bg-white hover:bg-gray-50 ${index === states.products.length - 1 ? "" : "border-b"}`}
                 key={product.id}
               >
                 <th
@@ -137,7 +138,8 @@ const DataTable = () => {
                 <td className="px-6 py-4">{product.operatingSystem}</td>
                 <td className="px-6 py-4">{product.gemChono}</td>
                 <td className="px-6 py-4">{product.descriptions}</td>
-                <td className="px-6 py-4">{product.categoryCode}</td>
+                <td className="px-6 py-4">{product.category.name}</td>
+                <td className="px-6 py-4">{product.quantity.currentQuantity}</td>
 
                 <td className="px-6 py-4 flex gap-x-2">
                   <UpdateModal product={product} />

@@ -21,7 +21,7 @@ type Props = {
 const UpdateModal = ({ product }: Props) => {
 
   const [toggle, setToggle] = useState(false);
-  const [categories, setCategories] = useState<IBanner[]>();
+  const [categories, setCategories] = useState<[]>();
 
   const multiInputsFieldRef = useRef<MultiInputsFieldRef>(null);
 
@@ -59,7 +59,10 @@ const UpdateModal = ({ product }: Props) => {
     reset,
     formState: { errors },
   } = useForm<IProduct>({
-    defaultValues: product,
+    defaultValues: {
+      ...product,
+      // ...product.quantity,
+    },
   });
 
   const onSubmit: SubmitHandler<IProduct> = async (data) => {
@@ -112,14 +115,38 @@ const UpdateModal = ({ product }: Props) => {
             />
           </div>
           <div>
-            <InputField
-              type="number"
-              fieldName="Số lượng"
-              field="currentQuantity"
-              register={register}
-              errors={errors}
-              defaultValue={1}
-            />
+            <div className="flex gap-x-2">
+              <div>
+                <InputField
+                  type="number"
+                  fieldName="SL hiện tại"
+                  field="quantity.currentQuantity"
+                  register={register}
+                  errors={errors}
+                  defaultValue={1}
+                />
+              </div>
+              <div>
+                <InputField
+                  type="number"
+                  fieldName="SL đã bán"
+                  field="quantity.soldQuantity"
+                  register={register}
+                  errors={errors}
+                  defaultValue={1}
+                />
+              </div>
+              <div>
+                <InputField
+                  type="number"
+                  fieldName="SL ra mắt"
+                  field="quantity.comingQuantity"
+                  register={register}
+                  errors={errors}
+                  defaultValue={1}
+                />
+              </div>
+            </div>
           </div>
           <div>
             <InputField
@@ -180,10 +207,10 @@ const UpdateModal = ({ product }: Props) => {
           <div>
             <SelectField
               fieldName="Loại"
-              field="categoryCode"
-              items={categories && categories.map(({ name, code }) => ({
+              field="categoryId"
+              items={categories && categories.map(({ id, name }) => ({
                 name: name,
-                value: code,
+                value: id,
               }))}
               register={register}
               errors={errors}

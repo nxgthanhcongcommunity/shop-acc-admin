@@ -78,10 +78,10 @@ const DataTable = () => {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">Email</th>
+            <th scope="col" className="px-6 py-3">Amount</th>
             <th scope="col" className="px-6 py-3">photo</th>
             <th scope="col" className="px-6 py-3">familyName</th>
             <th scope="col" className="px-6 py-3">givenName</th>
-            <th scope="col" className="px-6 py-3">idAtProvider</th>
             <th scope="col" className="px-6 py-3">isVerifyEmail</th>
             <th scope="col" className="px-6 py-3">providerName</th>
             <th scope="col" className="px-6 py-3">role</th>
@@ -100,6 +100,7 @@ const DataTable = () => {
                 >
                   {account.email}
                 </th>
+                <td className="px-6 py-4">{account.balance.amount}</td>
                 <td className="px-6 py-4">
                   <img
                     src={account.photo}
@@ -109,7 +110,6 @@ const DataTable = () => {
                 </td>
                 <td className="px-6 py-4">{account.familyName}</td>
                 <td className="px-6 py-4">{account.givenName}</td>
-                <td className="px-6 py-4">{account.idAtProvider}</td>
                 <td className="px-6 py-4">{account.isVerifyEmail}</td>
                 <td className="px-6 py-4">{account.providerName}</td>
                 <td className="px-6 py-4">{account.role}</td>

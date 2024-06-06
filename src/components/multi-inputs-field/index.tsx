@@ -23,26 +23,26 @@ interface IInputItem {
 }
 
 interface MultiInputsFieldProps {
-    initialItems?: IInputItem[];
+    initialItems?: IInputItem[] | null;
 }
 
 export interface MultiInputsFieldRef {
     getItems: () => string[];
+    resetItems: () => void;
 }
 
 const MultiInputsField = forwardRef<MultiInputsFieldRef, MultiInputsFieldProps>((props, ref) => {
-    let {
-        initialItems
-    } = props;
-    if (initialItems == null) {
-        initialItems = [
-            {
-                id: uuidv4(),
-                value: ''
-            }
-        ]
-    }
-    const [inputItems, setInputItems] = useState<IInputItem[]>(initialItems)
+    const { initialItems } = props;
+    const [inputItems, setInputItems] = useState<IInputItem[]>(() => {
+        return initialItems == null
+            ? [
+                {
+                    id: uuidv4(),
+                    value: ''
+                }
+            ]
+            : initialItems;
+    })
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>, changeIndex: number) => {
         const newItems = inputItems.map((item, index) =>
@@ -63,7 +63,15 @@ const MultiInputsField = forwardRef<MultiInputsFieldRef, MultiInputsFieldProps>(
     };
 
     useImperativeHandle(ref, () => ({
-        getItems: () => inputItems.map(item => item.value)
+        getItems: () => inputItems.map(item => item.value),
+        resetItems: () => {
+            setInputItems([
+                {
+                    id: uuidv4(),
+                    value: ''
+                }
+            ]);
+        }
     }))
 
     return (

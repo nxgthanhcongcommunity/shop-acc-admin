@@ -9,13 +9,7 @@ const Layout = () => {
       href: "products",
     },
     {
-      href: "quantities",
-    },
-    {
       href: "accounts",
-    },
-    {
-      href: "balances",
     },
     {
       href: "invoices",

@@ -10,6 +10,7 @@ export default function Component() {
   const contents = [
     <TabContainer>
       <CreateModal />
+      <div className="h-4"></div>
       <DataTable />
     </TabContainer>,
   ];

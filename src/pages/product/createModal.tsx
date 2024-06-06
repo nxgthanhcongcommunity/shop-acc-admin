@@ -16,8 +16,8 @@ import { ICategory, IProduct } from "../../models";
 const CreateModal = () => {
 
   const [toggle, setToggle] = useState(false);
-
   const [categories, setCategories] = useState<ICategory[]>();
+
   const multiInputsFieldRef = useRef<MultiInputsFieldRef>(null);
 
   const handleGetItems = () => {
@@ -26,6 +26,13 @@ const CreateModal = () => {
       return items.filter(item => ("" + item).length > 0);
     }
   };
+
+  const handleResetForm = () => {
+    reset();
+    if (multiInputsFieldRef.current) {
+      multiInputsFieldRef.current.resetItems();
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -47,8 +54,8 @@ const CreateModal = () => {
     const multiInputItems = handleGetItems();
     data.childsFilesCLDId = JSON.stringify(multiInputItems);
 
-    const response = await productApi.AddProduct(data);
-    reset();
+    await productApi.AddProduct(data);
+    handleResetForm();
   };
 
   return (
@@ -92,8 +99,8 @@ const CreateModal = () => {
           <div>
             <InputField
               type="number"
-              fieldName="Số lượng"
-              field="currentQuantity"
+              fieldName="Số lượng hiện tại"
+              field="quantity.currentQuantity"
               register={register}
               errors={errors}
               defaultValue={1}
@@ -165,10 +172,10 @@ const CreateModal = () => {
           <div>
             <SelectField
               fieldName="Loại"
-              field="categoryCode"
-              items={categories?.map(({ name, code }) => ({
+              field="categoryId"
+              items={categories?.map(({ id, name }) => ({
                 name: name,
-                value: code,
+                value: id,
               }))}
               register={register}
               errors={errors}
@@ -177,7 +184,7 @@ const CreateModal = () => {
 
           <div className="col-span-3 grid grid-cols-2 gap-4">
             <div>
-              <MultiInputsField ref={multiInputsFieldRef} />
+              <MultiInputsField ref={multiInputsFieldRef} initialItems={null} />
             </div>
             <div>
               <InputField
@@ -195,7 +202,6 @@ const CreateModal = () => {
           </Button>
           <Button skin="default" type="submit">
             <span className="flex">
-              <PlusIcon />
               Add product
             </span>
           </Button>

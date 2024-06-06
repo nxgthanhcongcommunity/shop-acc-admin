@@ -28,6 +28,7 @@ export interface IProduct extends IObjectKeys {
   gemChono: string;
   descriptions: string;
   categoryCode: string;
+  quantity: any;
 }
 
 export interface IAccount {
@@ -40,4 +41,5 @@ export interface IAccount {
   isVerifyEmail: string;
   providerName: string;
   role: string;
+  balance: any;
 }
