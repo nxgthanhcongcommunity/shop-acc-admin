@@ -7,7 +7,6 @@ import { Search } from "../../components";
 import { useDebounce } from "../../hooks";
 
 const DataTable = () => {
-
   const [states, updateStates] = useState({
     transactions: [],
     totalPage: 0,
@@ -15,15 +14,13 @@ const DataTable = () => {
       page: 1,
       limit: 5,
       name: "",
-    }
-  })
+    },
+  });
 
   const debouncedName = useDebounce(states.queryConfig.name, 1000);
 
   useEffect(() => {
-
     (async () => {
-
       const { succeed, data } = await transactionApi.Get(states.queryConfig);
       if (!succeed) return;
 
@@ -31,24 +28,20 @@ const DataTable = () => {
       updateStates({
         ...states,
         transactions: transactions,
-        totalPage: Math.ceil(total / states.queryConfig.limit)
+        totalPage: Math.ceil(total / states.queryConfig.limit),
       });
-
     })();
-
-  }, [states, states.queryConfig.page, debouncedName]);
+  }, [states.queryConfig.page, debouncedName]);
 
   const handleSearchChange = (currentValue: string) => {
-
     updateStates({
       ...states,
       queryConfig: {
         ...states.queryConfig,
         page: 1,
-        name: currentValue
-      }
+        name: currentValue,
+      },
     });
-
   };
 
   return (
@@ -59,15 +52,13 @@ const DataTable = () => {
           current={states.queryConfig.page}
           total={states.totalPage}
           onPageChange={(page) => {
-
             updateStates({
               ...states,
               queryConfig: {
                 ...states.queryConfig,
                 page,
-              }
-            })
-
+              },
+            });
           }}
           maxWidth={300}
         />
@@ -76,21 +67,51 @@ const DataTable = () => {
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4 overflow-y-scroll">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" className="px-6 py-3">transactionIdAtProvider</th>
-            <th scope="col" className="px-6 py-3">gateway</th>
-            <th scope="col" className="px-6 py-3">transactionDate</th>
-            <th scope="col" className="px-6 py-3">accountNumber</th>
-            <th scope="col" className="px-6 py-3">code</th>
-            <th scope="col" className="px-6 py-3">content</th>
-            <th scope="col" className="px-6 py-3">transferType</th>
-            <th scope="col" className="px-6 py-3">transferAmount</th>
-            <th scope="col" className="px-6 py-3">accumulated</th>
-            <th scope="col" className="px-6 py-3">subAccount</th>
-            <th scope="col" className="px-6 py-3">referenceCode</th>
-            <th scope="col" className="px-6 py-3">description</th>
-            <th scope="col" className="px-6 py-3">raw</th>
-            <th scope="col" className="px-6 py-3">createdAt</th>
-            <th scope="col" className="px-6 py-3">updatedAt</th>
+            <th scope="col" className="px-6 py-3">
+              transactionIdAtProvider
+            </th>
+            <th scope="col" className="px-6 py-3">
+              gateway
+            </th>
+            <th scope="col" className="px-6 py-3">
+              transactionDate
+            </th>
+            <th scope="col" className="px-6 py-3">
+              accountNumber
+            </th>
+            <th scope="col" className="px-6 py-3">
+              code
+            </th>
+            <th scope="col" className="px-6 py-3">
+              content
+            </th>
+            <th scope="col" className="px-6 py-3">
+              transferType
+            </th>
+            <th scope="col" className="px-6 py-3">
+              transferAmount
+            </th>
+            <th scope="col" className="px-6 py-3">
+              accumulated
+            </th>
+            <th scope="col" className="px-6 py-3">
+              subAccount
+            </th>
+            <th scope="col" className="px-6 py-3">
+              referenceCode
+            </th>
+            <th scope="col" className="px-6 py-3">
+              description
+            </th>
+            <th scope="col" className="px-6 py-3">
+              raw
+            </th>
+            <th scope="col" className="px-6 py-3">
+              createdAt
+            </th>
+            <th scope="col" className="px-6 py-3">
+              updatedAt
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -98,9 +119,13 @@ const DataTable = () => {
             states.transactions.map((transaction: any, index: number) => (
               <tr
                 key={transaction.id}
-                className={`bg-white ${index === states.transactions.length - 1 ? '' : 'border-b'} dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600`}
+                className={`bg-white ${
+                  index === states.transactions.length - 1 ? "" : "border-b"
+                } dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600`}
               >
-                <td className="px-6 py-4">{transaction.transactionIdAtProvider}</td>
+                <td className="px-6 py-4">
+                  {transaction.transactionIdAtProvider}
+                </td>
                 <td className="px-6 py-4">{transaction.gateway}</td>
                 <td className="px-6 py-4">{transaction.transactionDate}</td>
                 <td className="px-6 py-4">{transaction.accountNumber}</td>
@@ -115,7 +140,6 @@ const DataTable = () => {
                 <td className="px-6 py-4">{transaction.raw}</td>
                 <td className="px-6 py-4">{transaction.createdAt}</td>
                 <td className="px-6 py-4">{transaction.updatedAt}</td>
-
               </tr>
             ))}
         </tbody>
