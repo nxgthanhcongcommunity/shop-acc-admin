@@ -10,9 +10,16 @@ const invoiceApi = {
       params: queryConfig,
     });
     return transformResponse(response);
-
   },
 
+  async GetInvoiceDetails(queryConfig: any) {
+    const response = await axiosInstance({
+      method: METHODS.GET,
+      url: "invoice/get-invoice-details",
+      params: queryConfig,
+    });
+    return transformResponse(response);
+  },
 };
 
 export default invoiceApi;
