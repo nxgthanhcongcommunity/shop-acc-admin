@@ -1,6 +1,6 @@
 const Component = () => (
   <svg
-    className="w-6 h-6 text-gray-300 dark:text-white"
+    className="w-6 h-6 text-gray-400 "
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     width="24"

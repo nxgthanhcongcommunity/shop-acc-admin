@@ -8,20 +8,29 @@ const cld = new Cloudinary({
   },
 });
 
-const CdlImage = (props: any) => {
-  let { w = 255, h = 255, id } = props;
+interface ICdlImageProps {
+  id: string;
+  w?: number;
+  h?: number;
+}
 
-  console.log(("" + id).length);
+const CdlImage = (props: ICdlImageProps) => {
+  let { w, h, id } = props;
 
   if (id == null) {
     id = "shop-acc/x0hrnha2aq9xgseidnfb";
   }
+
   const myImage = cld.image(id);
 
-  // Resize to 250 x 250 pixels using the 'fill' crop mode.
-  myImage.resize(fill().width(w).height(h));
+  let url = "";
+  if (w && w > 0 && h && h > 0) {
+    url = myImage.resize(fill().width(w).height(h)).toURL();
+  } else {
+    url = myImage.resize(fill()).toURL();
+  }
 
-  return <AdvancedImage cldImg={myImage} />;
+  return <img src={url} alt="..." />;
 };
 
 export default CdlImage;

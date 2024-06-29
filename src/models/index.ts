@@ -7,30 +7,6 @@ export interface IBanner {
   name: string;
 }
 
-export interface ICategory extends IObjectKeys {
-  id: number;
-  name: string;
-  code: string;
-  bannerCode: string;
-  mainFileCLDId: string;
-}
-
-export interface IProduct extends IObjectKeys {
-  name: string;
-  mainFileUrl: string;
-  mainFileCLDId: string;
-  childsFilesUrl: string;
-  childsFilesCLDId: string;
-  code: string;
-  server: string;
-  loginType: string;
-  operatingSystem: string;
-  gemChono: string;
-  descriptions: string;
-  categoryCode: string;
-  quantity: any;
-}
-
 export interface IAccount {
   id: number;
   email: string;
@@ -43,3 +19,9 @@ export interface IAccount {
   role: string;
   balance: any;
 }
+
+export type { default as ICategory } from "./ICategory";
+export type { default as IProduct } from "./IProduct";
+export type { default as IBalance } from "./IBalance";
+export type { default as IInvoice } from "./IInvoice";
+export type { default as IInvoiceDetail } from "./IInvoiceDetail";

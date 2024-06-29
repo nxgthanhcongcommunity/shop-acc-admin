@@ -9,28 +9,20 @@ type Props = {
   product: IProduct;
 };
 const DeleteModal = ({ product }: Props) => {
-
   const [toggle, setToggle] = useState(false);
   const { handleSubmit, reset } = useForm();
 
   const onSubmit = async () => {
-
     const response = await productApi.DeleteProduct(product);
     reset();
-
   };
 
   return (
     <div>
       <div className="flex justify-end">
-        <Button
-          onClick={() => setToggle((prev) => !prev)}
-          data-modal-target="crud-modal"
-          data-modal-toggle="crud-modal"
-          skin="danger"
-        >
+        <span onClick={() => setToggle((prev) => !prev)}>
           <TrashIcon />
-        </Button>
+        </span>
       </div>
       <Modal
         toggle={toggle}

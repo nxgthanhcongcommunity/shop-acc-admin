@@ -1,18 +1,17 @@
 import { METHODS } from "../constants";
 import axiosInstance from "./axiosInstance";
-import { transformResponse } from "./utils";
+import { fetchApiAsync } from "./utils";
 
 const accountApi = {
-  async GetAccounts(queryConfig: any) {
-    const response = await axiosInstance({
-      method: METHODS.GET,
-      url: "account/get-accounts",
-      params: queryConfig,
-    });
-    return transformResponse(response);
-
-  },
-
+  GetAccounts: async (queryConfig: any) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.GET,
+          url: "account/get-all-accounts",
+          params: queryConfig,
+        })
+    ),
 };
 
 export default accountApi;

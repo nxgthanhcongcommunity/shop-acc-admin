@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { categoryApi } from "../../api";
 import productApi from "../../api/productApi";
 import { EditIcon, SettingIcon } from "../../assets/icons";
@@ -9,7 +9,7 @@ import {
   InputField,
   Modal,
   MultiInputsField,
-  SelectField
+  SelectField,
 } from "../../components";
 import { MultiInputsFieldRef } from "../../components/multi-inputs-field";
 import { IBanner, IProduct } from "../../models";
@@ -19,7 +19,6 @@ type Props = {
 };
 
 const UpdateModal = ({ product }: Props) => {
-
   const [toggle, setToggle] = useState(false);
   const [categories, setCategories] = useState<[]>();
 
@@ -31,16 +30,14 @@ const UpdateModal = ({ product }: Props) => {
       return {
         id: uuidv4(),
         value: item,
-      }
-    })
-  } catch {
-
-  }
+      };
+    });
+  } catch {}
 
   const handleGetItems = () => {
     if (multiInputsFieldRef.current) {
       const items = multiInputsFieldRef.current.getItems();
-      return items.filter(item => ("" + item).length > 0);
+      return items.filter((item) => ("" + item).length > 0);
     }
   };
 
@@ -66,7 +63,6 @@ const UpdateModal = ({ product }: Props) => {
   });
 
   const onSubmit: SubmitHandler<IProduct> = async (data) => {
-
     const multiInputItems = handleGetItems();
     data.childsFilesCLDId = JSON.stringify(multiInputItems);
 
@@ -74,20 +70,14 @@ const UpdateModal = ({ product }: Props) => {
 
     reset();
     setToggle(false);
-
   };
 
   return categories ? (
     <div>
       <div className="flex justify-end">
-        <Button
-          onClick={() => setToggle((prev) => !prev)}
-          data-modal-target="crud-modal"
-          data-modal-toggle="crud-modal"
-          skin="default"
-        >
+        <span onClick={() => setToggle((prev) => !prev)}>
           <EditIcon />
-        </Button>
+        </span>
       </div>
       <Modal
         toggle={toggle}
@@ -208,10 +198,13 @@ const UpdateModal = ({ product }: Props) => {
             <SelectField
               fieldName="Loại"
               field="categoryId"
-              items={categories && categories.map(({ id, name }) => ({
-                name: name,
-                value: id,
-              }))}
+              items={
+                categories &&
+                categories.map(({ id, name }) => ({
+                  name: name,
+                  value: id,
+                }))
+              }
               register={register}
               errors={errors}
             />
@@ -219,7 +212,10 @@ const UpdateModal = ({ product }: Props) => {
 
           <div className="col-span-3 grid grid-cols-2 gap-4">
             <div>
-              <MultiInputsField ref={multiInputsFieldRef} initialItems={initialItems} />
+              <MultiInputsField
+                ref={multiInputsFieldRef}
+                initialItems={initialItems}
+              />
             </div>
             <div>
               <InputField
@@ -230,7 +226,6 @@ const UpdateModal = ({ product }: Props) => {
               />
             </div>
           </div>
-
         </div>
         <div className="flex justify-end gap-x-4">
           <Button skin="alter" onClick={() => setToggle((prev) => !prev)}>

@@ -1,156 +1,125 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import DeleteModal from "./deleteModal";
 import UpdateModal from "./updateModal";
 
-import ResponsivePagination from "react-responsive-pagination";
+import { ColumnDef } from "@tanstack/react-table";
 import "react-responsive-pagination/themes/classic.css";
 import productApi from "../../api/productApi";
-import { CdlImage, Search } from "../../components";
-import { useDebounce } from "../../hooks";
+import { CdlImage, Table } from "../../components";
+import { IProduct } from "../../models";
 
 const DataTable = () => {
-  const [states, updateStates] = useState({
-    products: [],
-    totalPage: 0,
-    queryConfig: {
-      page: 1,
-      limit: 5,
-      name: "",
-    },
-  });
-
-  const debouncedName = useDebounce(states.queryConfig.name, 1000);
+  const [records, setRecords] = useState<IProduct[]>(() => []);
 
   useEffect(() => {
     (async () => {
-      const { succeed, data } = await productApi.GetProducts(states.queryConfig);
-      if (!succeed) return;
+      const response = await productApi.GetProducts({});
+      if (!response.succeed) return;
 
-      const { total, data: products } = data;
-      updateStates({
-        ...states,
-        products,
-        totalPage: Math.ceil(total / states.queryConfig.limit),
-      });
+      setRecords(response.data.data);
     })();
-  }, [states.queryConfig.page, debouncedName]);
+  }, []);
 
-  const handleSearchChange = (currentValue: string) => {
-    updateStates({
-      ...states,
-      queryConfig: {
-        ...states.queryConfig,
-        page: 1,
-        name: currentValue,
+  const columns = useMemo<ColumnDef<IProduct, any>[]>(
+    () => [
+      {
+        accessorFn: (row) => row.name,
+        id: "name",
+        cell: (info) => info.getValue(),
+        filterable: false,
       },
-    });
-  };
-
-  return (
-    <>
-      <div className="flex justify-between">
-        <Search onTextChange={handleSearchChange} />
-        <ResponsivePagination
-          current={states.queryConfig.page}
-          total={states.totalPage}
-          onPageChange={(page) => {
-            updateStates({
-              ...states,
-              queryConfig: {
-                ...states.queryConfig,
-                page,
-              },
-            });
-          }}
-          maxWidth={300}
-        />
-      </div>
-
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4 overflow-y-scroll">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Product name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Product code
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Main img
-            </th>
-            <th scope="col" className="px-6 py-3">
-              childs img
-            </th>
-            <th scope="col" className="px-6 py-3">
-              server
-            </th>
-            <th scope="col" className="px-6 py-3">
-              login type
-            </th>
-            <th scope="col" className="px-6 py-3">
-              operating
-            </th>
-            <th scope="col" className="px-6 py-3">
-              gemChono
-            </th>
-            <th scope="col" className="px-6 py-3">
-              descriptions
-            </th>
-            <th scope="col" className="px-6 py-3">
-              category
-            </th>
-            <th scope="col" className="px-6 py-3">
-              quantity
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {states.products &&
-            states.products.map((product: any, index: number) => (
-              <tr
-                className={`bg-white hover:bg-gray-50 ${index === states.products.length - 1 ? "" : "border-b"}`}
-                key={product.id}
-              >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  {product.name}
-                </th>
-                <td className="px-6 py-4">{product.code}</td>
-                <td className="px-6 py-4">
-                  <CdlImage w={60} h={60} id={product.mainFileCLDId} />
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex gap-x-1">
-                    {product.childsFilesCLDId &&
-                      JSON.parse(product.childsFilesCLDId).map((id: string) => (
-                        <CdlImage w={60} h={60} id={id} />
-                      ))}
-                  </div>
-                </td>
-                <td className="px-6 py-4">{product.server}</td>
-                <td className="px-6 py-4">{product.loginType}</td>
-                <td className="px-6 py-4">{product.operatingSystem}</td>
-                <td className="px-6 py-4">{product.gemChono}</td>
-                <td className="px-6 py-4">{product.descriptions}</td>
-                <td className="px-6 py-4">{product.category.name}</td>
-                <td className="px-6 py-4">{product.quantity.currentQuantity}</td>
-
-                <td className="px-6 py-4 flex gap-x-2">
-                  <UpdateModal product={product} />
-                  <DeleteModal product={product} />
-                </td>
-              </tr>
+      {
+        accessorFn: (row) => row.code,
+        id: "code",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.quantity.currentQuantity,
+        id: "currentQuantity",
+        cell: (info) => info.getValue(),
+        meta: {
+          filterVariant: "range",
+        },
+      },
+      {
+        accessorFn: (row) => row.mainFileCLDId,
+        id: "mainFileCLDId",
+        cell: (info) => <CdlImage w={24 * 4} h={24 * 4} id={info.getValue()} />,
+        header: () => <span>Hình ảnh</span>,
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+      {
+        accessorFn: (row) => row.childsFilesCLDId,
+        id: "childsFilesCLDId",
+        cell: (info) => (
+          <div className="flex items-center gap-x-1">
+            {JSON.parse(info.getValue()).map((id: string) => (
+              <CdlImage w={24 * 4} h={24 * 4} id={id} />
             ))}
-        </tbody>
-      </table>
-    </>
+          </div>
+        ),
+        header: () => <span>Hình ảnh</span>,
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+      {
+        accessorFn: (row) => row.server,
+        id: "server",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.loginType,
+        id: "loginType",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.operatingSystem,
+        id: "operatingSystem",
+        cell: (info) => info.getValue(),
+        meta: {
+          filterVariant: "select",
+        },
+      },
+      {
+        accessorFn: (row) => row.gemChono,
+        id: "gemChono",
+        cell: (info) => info.getValue(),
+        meta: {
+          filterVariant: "range",
+        },
+      },
+      {
+        accessorFn: (row) => row.descriptions,
+        id: "descriptions",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.category.name,
+        id: "categoryName",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => "Action",
+        id: "action",
+        cell: (info) => {
+          const record = info.cell.row.original;
+          return (
+            <div className="flex justify-start">
+              <UpdateModal product={record} />
+              <DeleteModal product={record} />
+            </div>
+          );
+        },
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+    ],
+    []
   );
+
+  return <Table columns={columns} records={records} setRecords={setRecords} />;
 };
 
 export default DataTable;

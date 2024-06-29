@@ -1,18 +1,17 @@
 import { METHODS } from "../constants";
 import axiosInstance from "./axiosInstance";
-import { transformResponse } from "./utils";
+import { fetchApiAsync } from "./utils";
 
 const sendmailApi = {
-  async Get(queryConfig: any) {
-    const response = await axiosInstance({
-      method: METHODS.GET,
-      url: "sendmail/get",
-      params: queryConfig,
-    });
-    return transformResponse(response);
-
-  },
-
+  Get: async (queryConfig: any) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.GET,
+          url: "sendmail/get",
+          params: queryConfig,
+        })
+    ),
 };
 
 export default sendmailApi;

@@ -1,44 +1,58 @@
 import { METHODS } from "../constants";
 import { ICategory } from "../models";
 import axiosInstance from "./axiosInstance";
-import { transformResponse } from "./utils";
+import { fetchApiAsync } from "./utils";
 
 const categoryApi = {
-  async GetCategories(queryConfig: any) {
-    const response = await axiosInstance({
-      method: METHODS.GET,
-      url: "category/get-categories",
-      params: queryConfig,
-    });
-    return transformResponse(response);
-  },
+  GetAccounts: async (queryConfig: any) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.GET,
+          url: "account/get-accounts",
+          params: queryConfig,
+        })
+    ),
 
-  async AddCategory(category: ICategory | FormData) {
-    const response = await axiosInstance({
-      method: METHODS.POST,
-      url: "category/add-category",
-      data: category,
-    });
-    return transformResponse(response);
-  },
+  GetCategories: async (queryConfig: any) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.GET,
+          url: "category/get-categories",
+          params: queryConfig,
+        })
+    ),
 
-  async UpdateCategory(category: ICategory) {
-    const response = await axiosInstance({
-      method: METHODS.PUT,
-      url: "category/update-category",
-      data: category,
-    });
-    return transformResponse(response);
-  },
+  AddCategory: async (category: ICategory | FormData) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.POST,
+          url: "category/add-category",
+          data: category,
+        })
+    ),
 
-  async DeleteCategory(category: ICategory) {
-    const response = await axiosInstance({
-      method: METHODS.DELETE,
-      url: "category/delete-category",
-      data: category,
-    });
-    return transformResponse(response);
-  },
+  UpdateCategory: async (category: ICategory) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.PUT,
+          url: "category/update-category",
+          data: category,
+        })
+    ),
+
+  DeleteCategory: async (category: ICategory) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.DELETE,
+          url: "category/delete-category",
+          data: category,
+        })
+    ),
 };
 
 export default categoryApi;

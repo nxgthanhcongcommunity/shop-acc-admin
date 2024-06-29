@@ -1,25 +1,27 @@
 import { METHODS } from "../constants";
 import axiosInstance from "./axiosInstance";
-import { transformResponse } from "./utils";
+import { fetchApiAsync } from "./utils";
 
 const invoiceApi = {
-  async Get(queryConfig: any) {
-    const response = await axiosInstance({
-      method: METHODS.GET,
-      url: "invoice/get",
-      params: queryConfig,
-    });
-    return transformResponse(response);
-  },
+  Get: async (queryConfig: any) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.GET,
+          url: "invoice/get",
+          params: queryConfig,
+        })
+    ),
 
-  async GetInvoiceDetails(queryConfig: any) {
-    const response = await axiosInstance({
-      method: METHODS.GET,
-      url: "invoice/get-invoice-details",
-      params: queryConfig,
-    });
-    return transformResponse(response);
-  },
+  GetInvoiceDetails: async (queryConfig: any) =>
+    await fetchApiAsync(
+      async () =>
+        await axiosInstance({
+          method: METHODS.GET,
+          url: "invoice/get-invoice-details",
+          params: queryConfig,
+        })
+    ),
 };
 
 export default invoiceApi;

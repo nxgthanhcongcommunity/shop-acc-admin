@@ -1,6 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
 const Layout = () => {
-
   const menuItems = [
     {
       href: "categories",
@@ -23,24 +22,24 @@ const Layout = () => {
     {
       href: "transactions",
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen flex">
       <aside
         id="logo-sidebar"
-        className="w-64 pt-4 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+        className="w-64 pt-4 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark1:bg-gray-800 dark1:border-gray-700"
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+        <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark1:bg-gray-800">
           <ul className="space-y-2 font-medium">
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark1:text-white hover:bg-gray-100 dark1:hover:bg-gray-700 group"
               >
                 <svg
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="w-5 h-5 text-gray-500 transition duration-75 dark1:text-gray-400 group-hover:text-gray-900 dark1:group-hover:text-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -55,12 +54,12 @@ const Layout = () => {
             <li>
               <button
                 type="button"
-                className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark1:text-white dark1:hover:bg-gray-700"
                 aria-controls="dropdown-example"
                 data-collapse-toggle="dropdown-example"
               >
                 <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark1:text-gray-400 group-hover:text-gray-900 dark1:group-hover:text-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -88,23 +87,21 @@ const Layout = () => {
                 </svg>
               </button>
               <ul id="dropdown-example" className="py-2 space-y-2">
-                {
-                  menuItems.map(item => (
-                    <li key={item.href} className="cursor-pointer">
-                      <Link to={item.href}>
-                        <span className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                          {item.href}
-                        </span>
-                      </Link>
-                    </li>
-                  ))
-                }
+                {menuItems.map((item) => (
+                  <li key={item.href} className="cursor-pointer">
+                    <Link to={item.href}>
+                      <span className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark1:text-white dark1:hover:bg-gray-700">
+                        {item.href}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </li>
           </ul>
         </div>
       </aside>
-      <div className="grow">
+      <div className="grow h-screen">
         <Outlet />
       </div>
     </div>

@@ -5,8 +5,8 @@ const defaultTabTitles = [
       <svg
         className={
           actived
-            ? "w-4 h-4 me-2 text-blue-600 dark:text-blue-500"
-            : "w-4 h-4 me-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"
+            ? "w-4 h-4 me-2 text-blue-600 dark1:text-blue-500"
+            : "w-4 h-4 me-2 text-gray-400 group-hover:text-gray-500 dark1:text-gray-500 dark1:group-hover:text-gray-300"
         }
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
@@ -23,8 +23,8 @@ const defaultTabTitles = [
       <svg
         className={
           actived
-            ? "w-4 h-4 me-2 text-blue-600 dark:text-blue-500"
-            : "w-4 h-4 me-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"
+            ? "w-4 h-4 me-2 text-blue-600 dark1:text-blue-500"
+            : "w-4 h-4 me-2 text-gray-400 group-hover:text-gray-500 dark1:text-gray-500 dark1:group-hover:text-gray-300"
         }
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
@@ -41,6 +41,6 @@ const tabTitles = {
   account: defaultTabTitles,
   banner: defaultTabTitles,
   category: defaultTabTitles,
-}
+};
 
 export default tabTitles;

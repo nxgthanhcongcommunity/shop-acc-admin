@@ -3,12 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { masterDataApi } from "../../api";
 import categoryApi from "../../api/categoryApi";
 import { AddIcon, PlusIcon } from "../../assets/icons";
-import {
-  Button,
-  InputField,
-  Modal,
-  SelectField
-} from "../../components";
+import { Button, InputField, Modal, SelectField } from "../../components";
 import { IBanner, ICategory } from "../../models";
 
 const CreateModal = () => {
@@ -16,7 +11,6 @@ const CreateModal = () => {
   const [banners, setBanners] = useState<IBanner[]>();
 
   useEffect(() => {
-
     (async () => {
       const { succeed, data } = await masterDataApi.getByKey({
         key: "home-page",
@@ -25,7 +19,6 @@ const CreateModal = () => {
       if (!succeed) return;
       setBanners(data.banners);
     })();
-
   }, []);
 
   const {
@@ -37,23 +30,21 @@ const CreateModal = () => {
 
   const onSubmit: SubmitHandler<ICategory> = async (data) => {
     const response = await categoryApi.AddCategory(data);
-
-    console.log(response)
-
     reset();
   };
 
   return (
     <div>
       <div className="flex justify-end mb-4">
-        <Button
+        {/* <Button
           onClick={() => setToggle((prev) => !prev)}
           data-modal-target="crud-modal"
           data-modal-toggle="crud-modal"
           skin="default"
-        >
+        ></Button> */}
+        <span onClick={() => setToggle((prev) => !prev)}>
           <AddIcon />
-        </Button>
+        </span>
       </div>
       <Modal
         modalName="Tạo loại sản phẩm mới"

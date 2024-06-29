@@ -14,7 +14,6 @@ const DeleteModal = ({ category }: Props) => {
   const { handleSubmit, reset } = useForm();
 
   const onSubmit = async () => {
-
     const response = await categoryApi.DeleteCategory(category);
     if (response == null) {
       alert("action failed");
@@ -28,14 +27,9 @@ const DeleteModal = ({ category }: Props) => {
   return (
     <div>
       <div className="flex justify-end">
-        <Button
-          onClick={() => setToggle((prev) => !prev)}
-          data-modal-target="crud-modal"
-          data-modal-toggle="crud-modal"
-          skin="danger"
-        >
+        <span onClick={() => setToggle((prev) => !prev)}>
           <TrashIcon />
-        </Button>
+        </span>
       </div>
       <Modal
         toggle={toggle}

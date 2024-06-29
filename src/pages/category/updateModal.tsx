@@ -5,11 +5,11 @@ import { EditIcon, SettingIcon } from "../../assets/icons";
 import { Button, InputField, Modal, SelectField } from "../../components";
 import { IBanner, ICategory } from "../../models";
 
-type Props = {
+interface IUpdateModalProps {
   category: ICategory;
-};
-const UpdateModal = ({ category }: Props) => {
+}
 
+const UpdateModal = ({ category }: IUpdateModalProps) => {
   const [toggle, setToggle] = useState(false);
   const [banners, setBanners] = useState<IBanner[]>();
 
@@ -22,7 +22,6 @@ const UpdateModal = ({ category }: Props) => {
       if (!succeed) return;
 
       setBanners(data.banners);
-
     })();
   }, []);
 
@@ -47,14 +46,9 @@ const UpdateModal = ({ category }: Props) => {
   return banners ? (
     <div>
       <div className="flex justify-end">
-        <Button
-          onClick={() => setToggle((prev) => !prev)}
-          data-modal-target="crud-modal"
-          data-modal-toggle="crud-modal"
-          skin="default"
-        >
+        <span onClick={() => setToggle((prev) => !prev)}>
           <EditIcon />
-        </Button>
+        </span>
       </div>
       <Modal
         toggle={toggle}
@@ -63,7 +57,7 @@ const UpdateModal = ({ category }: Props) => {
         errors={errors}
         handleSubmit={handleSubmit(onSubmit)}
       >
-        <div className="grid gap-4 mb-4 grid-cols-2">
+        <div className="grid gap-4 mb-4">
           <div>
             <InputField
               fieldName="Tên loại"

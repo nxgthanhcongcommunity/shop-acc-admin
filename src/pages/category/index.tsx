@@ -16,7 +16,5 @@ export default function Category() {
     </TabContainer>,
   ];
 
-  return (
-    <Tab tabs={tabTitles.account} contents={contents} />
-  );
+  return <Tab tabs={tabTitles.account} contents={contents} />;
 }
