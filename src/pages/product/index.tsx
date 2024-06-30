@@ -1,21 +1,30 @@
-import CreateModal from "./createModal";
-
 import "react-responsive-pagination/themes/classic.css";
 import { Tab } from "../../components";
 import { tabTitles } from "../../constants";
-import DataTable from "./dataTable";
 import { TabContainer } from "../../containers";
+import DataTable from "./dataTable";
+import Form from "./form";
+import { IProduct } from "../../models";
+import { IActionProps } from "../../prop-types";
+import { useState } from "react";
 
 export default function Component() {
+  const [selectedAction, setSelectedAction] = useState<
+    IActionProps<IProduct | null>
+  >({
+    action: "create",
+    record: null,
+  });
+
   const contents = [
     <TabContainer>
-      <CreateModal />
-      <div className="h-4"></div>
-      <DataTable />
+      <Form
+        selectedAction={selectedAction}
+        setSelectedAction={setSelectedAction}
+      />
+      <DataTable setSelectedAction={setSelectedAction} />
     </TabContainer>,
   ];
 
-  return (
-    <Tab tabs={tabTitles.banner} contents={contents} />
-  );
+  return <Tab tabs={tabTitles.banner} contents={contents} />;
 }

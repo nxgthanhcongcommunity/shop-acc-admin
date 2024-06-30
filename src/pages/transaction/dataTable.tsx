@@ -1,151 +1,85 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import ResponsivePagination from "react-responsive-pagination";
+import { ColumnDef } from "@tanstack/react-table";
 import "react-responsive-pagination/themes/classic.css";
 import { transactionApi } from "../../api";
-import { Search } from "../../components";
-import { useDebounce } from "../../hooks";
+import { Table } from "../../components";
+import { ITransaction } from "../../models";
 
 const DataTable = () => {
-  const [states, updateStates] = useState({
-    transactions: [],
-    totalPage: 0,
-    queryConfig: {
-      page: 1,
-      limit: 5,
-      name: "",
-    },
-  });
-
-  const debouncedName = useDebounce(states.queryConfig.name, 1000);
+  const [records, setRecords] = useState<ITransaction[]>(() => []);
 
   useEffect(() => {
     (async () => {
-      const { succeed, data } = await transactionApi.Get(states.queryConfig);
-      if (!succeed) return;
+      const response = await transactionApi.Get({});
+      if (!response.succeed) return;
 
-      const { total, data: transactions } = data;
-      updateStates({
-        ...states,
-        transactions: transactions,
-        totalPage: Math.ceil(total / states.queryConfig.limit),
-      });
+      setRecords(response.data.records);
     })();
-  }, [states.queryConfig.page, debouncedName]);
+  }, []);
 
-  const handleSearchChange = (currentValue: string) => {
-    updateStates({
-      ...states,
-      queryConfig: {
-        ...states.queryConfig,
-        page: 1,
-        name: currentValue,
+  const columns = useMemo<ColumnDef<ITransaction, any>[]>(
+    () => [
+      {
+        accessorFn: (row) => row.provider,
+        id: "provider",
+        cell: (info) => info.getValue(),
       },
-    });
-  };
-
-  return (
-    <>
-      <div className="flex justify-between">
-        <Search onTextChange={handleSearchChange} />
-        <ResponsivePagination
-          current={states.queryConfig.page}
-          total={states.totalPage}
-          onPageChange={(page) => {
-            updateStates({
-              ...states,
-              queryConfig: {
-                ...states.queryConfig,
-                page,
-              },
-            });
-          }}
-          maxWidth={300}
-        />
-      </div>
-
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark1:text-gray-400 mt-4 overflow-y-scroll">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark1:bg-gray-700 dark1:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              transactionIdAtProvider
-            </th>
-            <th scope="col" className="px-6 py-3">
-              gateway
-            </th>
-            <th scope="col" className="px-6 py-3">
-              transactionDate
-            </th>
-            <th scope="col" className="px-6 py-3">
-              accountNumber
-            </th>
-            <th scope="col" className="px-6 py-3">
-              code
-            </th>
-            <th scope="col" className="px-6 py-3">
-              content
-            </th>
-            <th scope="col" className="px-6 py-3">
-              transferType
-            </th>
-            <th scope="col" className="px-6 py-3">
-              transferAmount
-            </th>
-            <th scope="col" className="px-6 py-3">
-              accumulated
-            </th>
-            <th scope="col" className="px-6 py-3">
-              subAccount
-            </th>
-            <th scope="col" className="px-6 py-3">
-              referenceCode
-            </th>
-            <th scope="col" className="px-6 py-3">
-              description
-            </th>
-            <th scope="col" className="px-6 py-3">
-              raw
-            </th>
-            <th scope="col" className="px-6 py-3">
-              createdAt
-            </th>
-            <th scope="col" className="px-6 py-3">
-              updatedAt
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {states.transactions &&
-            states.transactions.map((transaction: any, index: number) => (
-              <tr
-                key={transaction.id}
-                className={`bg-white ${
-                  index === states.transactions.length - 1 ? "" : "border-b"
-                } dark1:bg-gray-800 dark1:border-gray-700 hover:bg-gray-50 dark1:hover:bg-gray-600`}
-              >
-                <td className="px-6 py-4">
-                  {transaction.transactionIdAtProvider}
-                </td>
-                <td className="px-6 py-4">{transaction.gateway}</td>
-                <td className="px-6 py-4">{transaction.transactionDate}</td>
-                <td className="px-6 py-4">{transaction.accountNumber}</td>
-                <td className="px-6 py-4">{transaction.code}</td>
-                <td className="px-6 py-4">{transaction.content}</td>
-                <td className="px-6 py-4">{transaction.transferType}</td>
-                <td className="px-6 py-4">{transaction.transferAmount}</td>
-                <td className="px-6 py-4">{transaction.accumulated}</td>
-                <td className="px-6 py-4">{transaction.subAccount}</td>
-                <td className="px-6 py-4">{transaction.referenceCode}</td>
-                <td className="px-6 py-4">{transaction.description}</td>
-                <td className="px-6 py-4">{transaction.raw}</td>
-                <td className="px-6 py-4">{transaction.createdAt}</td>
-                <td className="px-6 py-4">{transaction.updatedAt}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    </>
+      {
+        accessorFn: (row) => row.amount,
+        id: "amount",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.orderInfo,
+        id: "orderInfo",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.payDate,
+        id: "payDate",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.succeed,
+        id: "succeed",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.message,
+        id: "message",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.transactionNo,
+        id: "transactionNo",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.refNo,
+        id: "refNo",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.accountId,
+        id: "accountId",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.createdAt,
+        id: "createdAt",
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => row.updatedAt,
+        id: "updatedAt",
+        cell: (info) => info.getValue(),
+      },
+    ],
+    []
   );
+
+  return <Table columns={columns} records={records} setRecords={setRecords} />;
 };
 
 export default DataTable;

@@ -25,3 +25,5 @@ export type { default as IProduct } from "./IProduct";
 export type { default as IBalance } from "./IBalance";
 export type { default as IInvoice } from "./IInvoice";
 export type { default as IInvoiceDetail } from "./IInvoiceDetail";
+export type { default as ISendMail } from "./ISendMail";
+export type { default as ITransaction } from "./ITransaction";

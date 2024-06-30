@@ -5,7 +5,7 @@ interface ITabContainerProps {
 }
 
 const TabContainer = ({ children }: ITabContainerProps) => {
-  return <div className="shadow-md p-6 h-full">{children}</div>;
+  return <div className="shadow-md p-6 h-full bg-white">{children}</div>;
 };
 
 export default TabContainer;

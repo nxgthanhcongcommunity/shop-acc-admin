@@ -6,11 +6,14 @@ import UpdateModal from "./updateModal";
 import { ColumnDef } from "@tanstack/react-table";
 import "react-responsive-pagination/themes/classic.css";
 import productApi from "../../api/productApi";
-import { CdlImage, Table } from "../../components";
+import { ActionButton, CdlImage, Table } from "../../components";
 import { IProduct } from "../../models";
 
-const DataTable = () => {
+const DataTable = (props: any) => {
+  const { setSelectedAction } = props;
+
   const [records, setRecords] = useState<IProduct[]>(() => []);
+  const [reloadGridToggle, setReloadGridToggle] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -19,7 +22,7 @@ const DataTable = () => {
 
       setRecords(response.data.data);
     })();
-  }, []);
+  }, [reloadGridToggle]);
 
   const columns = useMemo<ColumnDef<IProduct, any>[]>(
     () => [
@@ -106,9 +109,19 @@ const DataTable = () => {
         cell: (info) => {
           const record = info.cell.row.original;
           return (
-            <div className="flex justify-start">
-              <UpdateModal product={record} />
-              <DeleteModal product={record} />
+            <div className="inline-flex" role="group">
+              <ActionButton
+                side={"left"}
+                onClick={() => setSelectedAction({ action: "update", record })}
+              >
+                Cập nhật
+              </ActionButton>
+              <ActionButton
+                side={"right"}
+                onClick={() => setSelectedAction({ action: "delete", record })}
+              >
+                Xóa
+              </ActionButton>
             </div>
           );
         },
@@ -119,7 +132,20 @@ const DataTable = () => {
     []
   );
 
-  return <Table columns={columns} records={records} setRecords={setRecords} />;
+  return (
+    <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 mb-8 overflow-y-scroll">
+      <div className="space-y-6">
+        <h5 className="text-xl font-medium text-gray-900 mb-8">Danh sách</h5>
+        <Table
+          columns={columns}
+          records={records}
+          triggerReloadGridToggle={() => {
+            setReloadGridToggle((prev) => !prev);
+          }}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default DataTable;

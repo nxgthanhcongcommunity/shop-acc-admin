@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import { ToastList } from "../components";
 const Layout = () => {
   const menuItems = [
     {
@@ -25,7 +26,8 @@ const Layout = () => {
   ];
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex w-screen">
+      <ToastList />
       <aside
         id="logo-sidebar"
         className="w-64 pt-4 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark1:bg-gray-800 dark1:border-gray-700"
@@ -101,7 +103,7 @@ const Layout = () => {
           </ul>
         </div>
       </aside>
-      <div className="grow h-screen">
+      <div className="grow h-screen bg-gray-50 overflow-x-scroll">
         <Outlet />
       </div>
     </div>

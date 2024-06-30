@@ -1,14 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import React, { useEffect, useState } from "react";
 import { categoryApi, masterDataApi } from "../../api";
-import { CdlImage, Table } from "../../components";
+import { ActionButton, CdlImage, Table } from "../../components";
 import { ICategory } from "../../models";
-import DeleteModal from "./deleteModal";
-import UpdateModal from "./updateModal";
 
-const DataTable = () => {
+const DataTable = (props: any) => {
+  const { setSelectedAction } = props;
   const [records, setRecords] = React.useState<ICategory[]>(() => []);
   const [banners, setBanners] = useState<any>([]);
+  const [reloadGridToggle, setReloadGridToggle] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -17,7 +17,7 @@ const DataTable = () => {
 
       setRecords(response.data.data);
     })();
-  }, []);
+  }, [reloadGridToggle]);
 
   useEffect(() => {
     (async () => {
@@ -34,25 +34,28 @@ const DataTable = () => {
   const columns = React.useMemo<ColumnDef<ICategory, any>[]>(
     () => [
       {
+        header: () => "Hình ảnh",
         accessorFn: (row) => row.mainFileCLDId,
         id: "mainFileCLDId",
         cell: (info) => <CdlImage w={16 * 4} h={16 * 4} id={info.getValue()} />,
-        header: () => <span>Hình ảnh</span>,
         enableColumnFilter: false,
         enableSorting: false,
       },
       {
+        header: () => "Tên loại",
         accessorFn: (row) => row.name,
         id: "name",
         cell: (info) => info.getValue(),
         filterable: false,
       },
       {
+        header: () => "Mã",
         accessorFn: (row) => row.code,
         id: "code",
         cell: (info) => info.getValue(),
       },
       {
+        header: () => "Banner",
         accessorFn: (row) => row.bannerCode,
         id: "bannerCode",
         cell: (info) => {
@@ -62,59 +65,49 @@ const DataTable = () => {
         },
       },
       {
+        header: () => "Thao tác",
         accessorFn: (row) => "Action",
         id: "action",
         cell: (info) => {
           const record = info.cell.row.original;
           return (
-            <div className="flex justify-start">
-              <UpdateModal category={record} />
-              <DeleteModal category={record} />
+            <div className="inline-flex" role="group">
+              <ActionButton
+                side={"left"}
+                onClick={() => setSelectedAction({ action: "update", record })}
+              >
+                Cập nhật
+              </ActionButton>
+              <ActionButton
+                side={"right"}
+                onClick={() => setSelectedAction({ action: "delete", record })}
+              >
+                Xóa
+              </ActionButton>
             </div>
           );
         },
         enableColumnFilter: false,
         enableSorting: false,
       },
-      // {
-      //   accessorFn: (row) => row.bannerCode,
-      //   id: "Banner",
-      //   cell: (info) => info.getValue(),
-      // },
-
-      // {
-      //   accessorKey: "age",
-      //   header: () => "Age",
-      //   meta: {
-      //     filterVariant: "range",
-      //   },
-      // },
-      // {
-      //   accessorKey: "visits",
-      //   header: () => <span>Visits</span>,
-      //   meta: {
-      //     filterVariant: "range",
-      //   },
-      // },
-      // {
-      //   accessorKey: "status",
-      //   header: "Status",
-      //   meta: {
-      //     filterVariant: "select",
-      //   },
-      // },
-      // {
-      //   accessorKey: "progress",
-      //   header: "Profile Progress",
-      //   meta: {
-      //     filterVariant: "range",
-      //   },
-      // },
     ],
     [banners]
   );
 
-  return <Table columns={columns} records={records} setRecords={setRecords} />;
+  return (
+    <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 mb-8">
+      <form className="space-y-6">
+        <h5 className="text-xl font-medium text-gray-900 mb-8">Danh sách</h5>
+        <Table
+          columns={columns}
+          records={records}
+          triggerReloadGridToggle={() => {
+            setReloadGridToggle((prev) => !prev);
+          }}
+        />
+      </form>
+    </div>
+  );
 };
 
 export default DataTable;

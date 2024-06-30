@@ -7,7 +7,7 @@ const Component = ({
   defaultValue,
 }: any) => {
   return (
-    <>
+    <div className="flex flex-col">
       <label
         htmlFor={field}
         className="block mb-2 text-sm font-medium text-gray-900 dark1:text-white"
@@ -20,10 +20,10 @@ const Component = ({
         id={field}
         placeholder={`${field}...`}
         {...register(field)}
-        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark1:bg-gray-700 dark1:border-gray-600 dark1:placeholder-gray-400 dark1:text-white dark1:focus:ring-blue-500 dark1:focus:border-blue-500 dark1:shadow-sm-light"
+        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none"
       />
       {errors[field] && <span>This field is required</span>}
-    </>
+    </div>
   );
 };
 

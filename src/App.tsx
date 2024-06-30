@@ -32,7 +32,7 @@ const router = createBrowserRouter(
         },
         {
           path: "invoices",
-          element: <InvoicePage />
+          element: <InvoicePage />,
         },
         {
           path: "invoice-details",
@@ -50,7 +50,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: "/",
+    basename: "/admin",
   }
 );
 

@@ -28,11 +28,13 @@ interface MultiInputsFieldProps {
 export interface MultiInputsFieldRef {
   getItems: () => string[];
   resetItems: () => void;
+  setItems: (items: IInputItem[]) => void;
 }
 
 const MultiInputsField = forwardRef<MultiInputsFieldRef, MultiInputsFieldProps>(
   (props, ref) => {
     const { initialItems } = props;
+
     const [inputItems, setInputItems] = useState<IInputItem[]>(() => {
       return initialItems == null
         ? [
@@ -73,10 +75,11 @@ const MultiInputsField = forwardRef<MultiInputsFieldRef, MultiInputsFieldProps>(
           },
         ]);
       },
+      setItems: (items: any) => setInputItems(items),
     }));
 
     return (
-      <>
+      <div>
         <label className="block mb-2 text-sm font-medium text-gray-900 dark1:text-white">
           Các hình ảnh con
         </label>
@@ -97,7 +100,7 @@ const MultiInputsField = forwardRef<MultiInputsFieldRef, MultiInputsFieldProps>(
             add
           </span>
         </div>
-      </>
+      </div>
     );
   }
 );

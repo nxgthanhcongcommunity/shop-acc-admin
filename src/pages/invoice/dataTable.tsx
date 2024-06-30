@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 
-import ResponsivePagination from "react-responsive-pagination";
+import { ColumnDef } from "@tanstack/react-table";
 import "react-responsive-pagination/themes/classic.css";
 import { invoiceApi } from "../../api";
-import { Search, Table } from "../../components";
-import { useDebounce } from "../../hooks";
+import { Table } from "../../components";
 import { IInvoice } from "../../models";
-import { ColumnDef } from "@tanstack/react-table";
 
 const DataTable = () => {
   const [records, setRecords] = useState<IInvoice[]>(() => []);
+  const [reloadGridToggle, setReloadGridToggle] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -18,7 +17,7 @@ const DataTable = () => {
 
       setRecords(response.data.records);
     })();
-  }, []);
+  }, [reloadGridToggle]);
 
   const columns = useMemo<ColumnDef<IInvoice, any>[]>(
     () => [
@@ -36,7 +35,21 @@ const DataTable = () => {
     []
   );
 
-  return <Table columns={columns} records={records} setRecords={setRecords} />;
+  // return <Table columns={columns} records={records} setRecords={setRecords} />;
+  return (
+    <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 mb-8">
+      <form className="space-y-6">
+        <h5 className="text-xl font-medium text-gray-900 mb-8">Danh sách</h5>
+        <Table
+          columns={columns}
+          records={records}
+          triggerReloadGridToggle={() => {
+            setReloadGridToggle((prev) => !prev);
+          }}
+        />
+      </form>
+    </div>
+  );
 };
 
 export default DataTable;

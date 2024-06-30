@@ -12,7 +12,7 @@ import {
   SelectField,
 } from "../../components";
 import { MultiInputsFieldRef } from "../../components/multi-inputs-field";
-import { IBanner, IProduct } from "../../models";
+import { IProduct } from "../../models";
 
 type Props = {
   product: IProduct;

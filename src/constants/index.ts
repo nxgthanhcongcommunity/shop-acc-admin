@@ -10,4 +10,6 @@ export const METHODS = {
   DELETE: "DELETE",
 };
 
-export { default as tabTitles } from './tabTitles'
+export { default as tabTitles } from "./tabTitles";
+
+export { default as TOASTMSG_TYPES } from "./toastMsgTypes";

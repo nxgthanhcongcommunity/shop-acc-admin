@@ -8,7 +8,7 @@ const sendmailApi = {
       async () =>
         await axiosInstance({
           method: METHODS.GET,
-          url: "sendmail/get",
+          url: "sendmail",
           params: queryConfig,
         })
     ),

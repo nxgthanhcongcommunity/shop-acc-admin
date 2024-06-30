@@ -8,13 +8,12 @@ import {
   InputField,
   Modal,
   MultiInputsField,
-  SelectField
+  SelectField,
 } from "../../components";
 import { MultiInputsFieldRef } from "../../components/multi-inputs-field";
 import { ICategory, IProduct } from "../../models";
 
 const CreateModal = () => {
-
   const [toggle, setToggle] = useState(false);
   const [categories, setCategories] = useState<ICategory[]>();
 
@@ -23,7 +22,7 @@ const CreateModal = () => {
   const handleGetItems = () => {
     if (multiInputsFieldRef.current) {
       const items = multiInputsFieldRef.current.getItems();
-      return items.filter(item => ("" + item).length > 0);
+      return items.filter((item) => ("" + item).length > 0);
     }
   };
 
@@ -32,7 +31,7 @@ const CreateModal = () => {
     if (multiInputsFieldRef.current) {
       multiInputsFieldRef.current.resetItems();
     }
-  }
+  };
 
   useEffect(() => {
     (async () => {
@@ -201,9 +200,7 @@ const CreateModal = () => {
             Cancel
           </Button>
           <Button skin="default" type="submit">
-            <span className="flex">
-              Add product
-            </span>
+            <span className="flex">Add product</span>
           </Button>
         </div>
       </Modal>
