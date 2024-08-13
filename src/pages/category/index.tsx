@@ -1,7 +1,5 @@
+import { Flex } from "antd";
 import { useState } from "react";
-import { Tab } from "../../components";
-import { tabTitles } from "../../constants";
-import { TabContainer } from "../../containers";
 import { ICategory } from "../../models";
 import { IActionProps } from "../../prop-types";
 import DataTable from "./dataTable";
@@ -15,15 +13,13 @@ export default function Category() {
     record: null,
   });
 
-  const contents = [
-    <TabContainer>
+  return (
+    <Flex vertical style={{ width: "100%" }}>
       <Form
         selectedAction={selectedAction}
         setSelectedAction={setSelectedAction}
       />
       <DataTable setSelectedAction={setSelectedAction} />
-    </TabContainer>,
-  ];
-
-  return <Tab tabs={tabTitles.account} contents={contents} />;
+    </Flex>
+  );
 }

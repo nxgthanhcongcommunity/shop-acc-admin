@@ -5,14 +5,24 @@ import {
   CategoryPage,
   InvoiceDetailsPage,
   InvoicePage,
+  LoginPage,
   ProductPage,
   SendMailPage,
   TransactionPage,
 } from "./pages";
 import { Layout } from "./containers";
+import PrivateElement from "./containers/privateElement";
 
 const router = createBrowserRouter(
   [
+    {
+      path: "login",
+      element: (
+        <PrivateElement>
+          <LoginPage />
+        </PrivateElement>
+      ),
+    },
     {
       path: "/",
       element: <Layout />,
@@ -20,37 +30,65 @@ const router = createBrowserRouter(
         {
           index: true,
           path: "categories",
-          element: <CategoryPage />,
+          element: (
+            <PrivateElement>
+              <CategoryPage />
+            </PrivateElement>
+          ),
         },
         {
           path: "products",
-          element: <ProductPage />,
+          element: (
+            <PrivateElement>
+              <ProductPage />
+            </PrivateElement>
+          ),
         },
         {
           path: "accounts",
-          element: <AccountPage />,
+          element: (
+            <PrivateElement>
+              <AccountPage />
+            </PrivateElement>
+          ),
         },
         {
           path: "invoices",
-          element: <InvoicePage />,
+          element: (
+            <PrivateElement>
+              <InvoicePage />
+            </PrivateElement>
+          ),
         },
         {
           path: "invoice-details",
-          element: <InvoiceDetailsPage />,
+          element: (
+            <PrivateElement>
+              <InvoiceDetailsPage />
+            </PrivateElement>
+          ),
         },
         {
           path: "sendmails",
-          element: <SendMailPage />,
+          element: (
+            <PrivateElement>
+              <SendMailPage />
+            </PrivateElement>
+          ),
         },
         {
           path: "transactions",
-          element: <TransactionPage />,
+          element: (
+            <PrivateElement>
+              <TransactionPage />
+            </PrivateElement>
+          ),
         },
       ],
     },
   ],
   {
-    basename: "/admin",
+    basename: "/",
   }
 );
 

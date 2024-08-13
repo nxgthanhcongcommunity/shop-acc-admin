@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 
-import ResponsivePagination from "react-responsive-pagination";
+import { ColumnDef } from "@tanstack/react-table";
 import "react-responsive-pagination/themes/classic.css";
 import { sendmailApi } from "../../api";
-import { Search, Table } from "../../components";
-import { useDebounce } from "../../hooks";
+import { Table } from "../../components";
 import { ISendMail } from "../../models";
-import { ColumnDef } from "@tanstack/react-table";
 
 const DataTable = () => {
   const [records, setRecords] = useState<ISendMail[]>(() => []);

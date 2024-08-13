@@ -1,12 +1,10 @@
+import { Flex } from "antd";
+import { useState } from "react";
 import "react-responsive-pagination/themes/classic.css";
-import { Tab } from "../../components";
-import { tabTitles } from "../../constants";
-import { TabContainer } from "../../containers";
-import DataTable from "./dataTable";
-import Form from "./form";
 import { IProduct } from "../../models";
 import { IActionProps } from "../../prop-types";
-import { useState } from "react";
+import DataTable from "./dataTable";
+import Form from "./form";
 
 export default function Component() {
   const [selectedAction, setSelectedAction] = useState<
@@ -16,15 +14,13 @@ export default function Component() {
     record: null,
   });
 
-  const contents = [
-    <TabContainer>
+  return (
+    <Flex vertical style={{ width: "100%" }}>
       <Form
         selectedAction={selectedAction}
         setSelectedAction={setSelectedAction}
       />
       <DataTable setSelectedAction={setSelectedAction} />
-    </TabContainer>,
-  ];
-
-  return <Tab tabs={tabTitles.banner} contents={contents} />;
+    </Flex>
+  );
 }

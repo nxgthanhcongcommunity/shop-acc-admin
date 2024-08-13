@@ -86,7 +86,7 @@ const Form = (props: any) => {
     <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow mb-4">
       <form className="space-y-2" onSubmit={handleSubmit(handleFormSubmit)}>
         <h5 className="text-lg font-medium text-gray-900 mb-6">
-          Tạo mới loại sản phẩm
+          Quản lý loại acc
         </h5>
         <div className="grid grid-cols-4 gap-x-8 gap-y-4">
           <InputField
