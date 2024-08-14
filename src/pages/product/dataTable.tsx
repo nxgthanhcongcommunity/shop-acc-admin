@@ -1,19 +1,15 @@
 import { Space, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import "react-responsive-pagination/themes/classic.css";
-import { IProduct } from "../../models";
 import productApi from "../../api/productApi";
-import { ActionButton } from "../../components";
+import { IProduct } from "../../models";
 
 const DataTable = (props: any) => {
   const { setSelectedAction } = props;
-
   const [records, setRecords] = useState<IProduct[]>([]);
-  const [reloadGridToggle, setReloadGridToggle] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      debugger;
       const response = await productApi.GetProducts({});
       if (!response.succeed) return;
 

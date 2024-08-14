@@ -3,7 +3,6 @@ import { Navigate, useLocation } from "react-router-dom";
 const PrivateElement = (props: any) => {
   const { children } = props;
 
-  // const user = useSelector((state: RootState) => state.user);
   const user = {
     isLogged: true,
   };

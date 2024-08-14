@@ -1,9 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { ColumnDef } from "@tanstack/react-table";
-import "react-responsive-pagination/themes/classic.css";
+import { Table, TableProps } from "antd";
 import { transactionApi } from "../../api";
-import { Table } from "../../components";
 import { ITransaction } from "../../models";
 
 const DataTable = () => {
@@ -18,68 +16,65 @@ const DataTable = () => {
     })();
   }, []);
 
-  const columns = useMemo<ColumnDef<ITransaction, any>[]>(
-    () => [
-      {
-        accessorFn: (row) => row.provider,
-        id: "provider",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.amount,
-        id: "amount",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.orderInfo,
-        id: "orderInfo",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.payDate,
-        id: "payDate",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.succeed,
-        id: "succeed",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.message,
-        id: "message",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.transactionNo,
-        id: "transactionNo",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.refNo,
-        id: "refNo",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.accountId,
-        id: "accountId",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.createdAt,
-        id: "createdAt",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.updatedAt,
-        id: "updatedAt",
-        cell: (info) => info.getValue(),
-      },
-    ],
-    []
-  );
+  const columns: TableProps<ITransaction>["columns"] = [
+    {
+      title: "provider",
+      dataIndex: "provider",
+      key: "provider",
+    },
+    {
+      title: "amount",
+      dataIndex: "amount",
+      key: "amount",
+    },
+    {
+      title: "orderInfo",
+      dataIndex: "orderInfo",
+      key: "orderInfo",
+    },
+    {
+      title: "payDate",
+      dataIndex: "payDate",
+      key: "payDate",
+    },
+    {
+      title: "succeed",
+      dataIndex: "succeed",
+      key: "succeed",
+    },
+    {
+      title: "message",
+      dataIndex: "message",
+      key: "message",
+    },
+    {
+      title: "transactionNo",
+      dataIndex: "transactionNo",
+      key: "transactionNo",
+    },
+    {
+      title: "refNo",
+      dataIndex: "refNo",
+      key: "refNo",
+    },
+    {
+      title: "accountId",
+      dataIndex: "accountId",
+      key: "accountId",
+    },
+    {
+      title: "createdAt",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
+    {
+      title: "updatedAt",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+    },
+  ];
 
-  return <Table columns={columns} records={records} setRecords={setRecords} />;
+  return <Table columns={columns} dataSource={records} />;
 };
 
 export default DataTable;

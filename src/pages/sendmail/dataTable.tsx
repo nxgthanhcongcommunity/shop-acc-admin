@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { Table, TableProps } from "antd";
 import "react-responsive-pagination/themes/classic.css";
 import { sendmailApi } from "../../api";
-import { Table } from "../../components";
 import { ISendMail } from "../../models";
 
 const DataTable = () => {
@@ -18,53 +17,50 @@ const DataTable = () => {
     })();
   }, []);
 
-  const columns = useMemo<ColumnDef<ISendMail, any>[]>(
-    () => [
-      {
-        accessorFn: (row) => row.from,
-        id: "from",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.to,
-        id: "to",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.subject,
-        id: "subject",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.text,
-        id: "text",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.attempTimes,
-        id: "attempTimes",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.succeed,
-        id: "succeed",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.createdAt,
-        id: "createdAt",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.updatedAt,
-        id: "updatedAt",
-        cell: (info) => info.getValue(),
-      },
-    ],
-    []
-  );
+  const columns: TableProps<ISendMail>["columns"] = [
+    {
+      title: "from",
+      dataIndex: "from",
+      key: "from",
+    },
+    {
+      title: "to",
+      dataIndex: "to",
+      key: "to",
+    },
+    {
+      title: "subject",
+      dataIndex: "subject",
+      key: "subject",
+    },
+    {
+      title: "text",
+      dataIndex: "text",
+      key: "text",
+    },
+    {
+      title: "attempTimes",
+      dataIndex: "attempTimes",
+      key: "attempTimes",
+    },
+    {
+      title: "succeed",
+      dataIndex: "succeed",
+      key: "succeed",
+    },
+    {
+      title: "createdAt",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
+    {
+      title: "updatedAt",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+    },
+  ];
 
-  return <Table columns={columns} records={records} setRecords={setRecords} />;
+  return <Table columns={columns} dataSource={records} />;
 };
 
 export default DataTable;

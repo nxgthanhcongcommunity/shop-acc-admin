@@ -1,19 +1,10 @@
-import { Tab } from "../../components";
-import { tabTitles } from "../../constants";
-import { TabContainer } from "../../containers";
+import { Flex } from "antd";
 import DataTable from "./dataTable";
 
 export default function Account() {
-
-  const contents = [
-    (
-      <TabContainer>
-        <DataTable />
-      </TabContainer>
-    ),
-  ]
-
   return (
-    <Tab tabs={tabTitles.account} contents={contents} />
+    <Flex vertical style={{ width: "100%" }}>
+      <DataTable />
+    </Flex>
   );
 }

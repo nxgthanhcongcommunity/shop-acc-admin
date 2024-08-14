@@ -19,7 +19,7 @@ const items: MenuItem[] = [
       { key: "categories", label: "Loại acc" },
       { key: "accounts", label: "Người dùng" },
       { key: "invoices", label: "Hóa đơn" },
-      { key: "invoice-details", label: "Chi tiết hóa đơn" },
+      // { key: "invoice-details", label: "Chi tiết hóa đơn" },
       { key: "sendmails", label: "Gửi mail tài khoản" },
       { key: "transactions", label: "Giao dịch" },
     ],
