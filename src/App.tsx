@@ -17,11 +17,7 @@ const router = createBrowserRouter(
   [
     {
       path: "login",
-      element: (
-        <PrivateElement>
-          <LoginPage />
-        </PrivateElement>
-      ),
+      element: <LoginPage />,
     },
     {
       path: "/",
@@ -86,10 +82,10 @@ const router = createBrowserRouter(
         },
       ],
     },
-  ],
-  {
-    basename: "/",
-  }
+  ]
+  // {
+  //   basename: "",
+  // }
 );
 
 function App() {

@@ -1,17 +1,15 @@
-import { METHODS } from "../constants";
-import axiosInstance from "./axiosInstance";
-import { fetchApiAsync } from "./utils";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { ITransaction } from "../models";
+import baseQuery from "./baseQuery";
 
-const transactionApi = {
-  Get: async (queryConfig: any) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.GET,
-          url: "transaction/get",
-          params: queryConfig,
-        })
-    ),
-};
+export const transactionApi = createApi({
+  reducerPath: "transactionApi",
+  baseQuery,
+  endpoints: (builder) => ({
+    getAllTransactions: builder.query<IPaging<ITransaction>, void>({
+      query: () => `transaction/get`,
+    }),
+  }),
+});
 
-export default transactionApi;
+export const { useGetAllTransactionsQuery } = transactionApi;

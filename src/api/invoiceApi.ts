@@ -1,27 +1,18 @@
-import { METHODS } from "../constants";
-import axiosInstance from "./axiosInstance";
-import { fetchApiAsync } from "./utils";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQuery from "./baseQuery";
+import { IInvoice } from "../models";
 
-const invoiceApi = {
-  Get: async (queryConfig: any) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.GET,
-          url: "invoice/get",
-          params: queryConfig,
-        })
-    ),
+export const invoiceApi = createApi({
+  reducerPath: "invoiceApi",
+  baseQuery,
+  endpoints: (builder) => ({
+    getAllInvoices: builder.query<IPaging<IInvoice>, void>({
+      query: () => `invoice/get`,
+    }),
+    // getAllInvoices: builder.query<IPaging<IInvoice>, void>({
+    //   query: () => `invoice/get`,
+    // }),
+  }),
+});
 
-  GetInvoiceDetails: async (queryConfig: any) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.GET,
-          url: "invoice/get-invoice-details",
-          params: queryConfig,
-        })
-    ),
-};
-
-export default invoiceApi;
+export const { useGetAllInvoicesQuery } = invoiceApi;

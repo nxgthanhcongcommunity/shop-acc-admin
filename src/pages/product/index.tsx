@@ -1,4 +1,4 @@
-import { Flex } from "antd";
+import { Card, Flex } from "antd";
 import { useState } from "react";
 import "react-responsive-pagination/themes/classic.css";
 import { IProduct } from "../../models";
@@ -15,12 +15,14 @@ export default function Component() {
   });
 
   return (
-    <Flex vertical style={{ width: "100%" }}>
-      <Form
-        selectedAction={selectedAction}
-        setSelectedAction={setSelectedAction}
-      />
-      <DataTable setSelectedAction={setSelectedAction} />
-    </Flex>
+    <Card title="Quản lý Acc game">
+      <Flex vertical style={{ width: "100%" }}>
+        <Form
+          selectedAction={selectedAction}
+          setSelectedAction={setSelectedAction}
+        />
+        <DataTable setSelectedAction={setSelectedAction} />
+      </Flex>
+    </Card>
   );
 }

@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
 import { IBanner, ICategory } from "../../models";
-import { categoryApi, masterDataApi } from "../../api";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { InputField, SelectField } from "../../components";
 import { useToast } from "../../providers/toastProvider";
 import { TOASTMSG_TYPES } from "../../constants";
+import {
+  useAddCategoryMutation,
+  useDeleteCategoryMutation,
+  useUpdateCategoryMutation,
+} from "../../api/categoryApi";
+import { useGetMasterDataQuery } from "../../api/masterDataApi";
 
 const Form = (props: any) => {
   const { selectedAction, setSelectedAction } = props;
 
   const { addToastMessage } = useToast();
 
-  const [banners, setBanners] = useState<IBanner[]>();
+  const [addCategory] = useAddCategoryMutation();
+  const [updateCategory] = useUpdateCategoryMutation();
+  const [deleteCategory] = useDeleteCategoryMutation();
 
   useEffect(() => {
     selectedAction && reset(selectedAction.record);
@@ -19,16 +26,7 @@ const Form = (props: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAction]);
 
-  useEffect(() => {
-    (async () => {
-      const { succeed, data } = await masterDataApi.getByKey({
-        key: "home-page",
-      });
-
-      if (!succeed) return;
-      setBanners(data.banners);
-    })();
-  }, []);
+  const { data } = useGetMasterDataQuery();
 
   const {
     register,
@@ -42,17 +40,17 @@ const Form = (props: any) => {
 
     switch (selectedAction.action) {
       case "create":
-        response = await categoryApi.AddCategory(data);
+        response = await addCategory(data);
         break;
       case "update":
-        response = await categoryApi.UpdateCategory(data);
+        response = await updateCategory(data);
         break;
       case "delete":
-        response = await categoryApi.DeleteCategory(data);
+        response = await deleteCategory(data);
         break;
     }
 
-    if (response?.succeed) {
+    if (response?.data != null) {
       addToastMessage({
         id: "" + Date.now(),
         type: TOASTMSG_TYPES.SUCCESS,
@@ -104,7 +102,7 @@ const Form = (props: any) => {
           <SelectField
             fieldName="Banner"
             field="bannerCode"
-            items={banners?.map((banner) => ({
+            items={(data?.banners as IBanner[])?.map((banner) => ({
               name: banner.name,
               value: banner.code,
             }))}

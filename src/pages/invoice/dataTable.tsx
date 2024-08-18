@@ -1,20 +1,10 @@
-import { useEffect, useState } from "react";
-
 import { Table, TableProps } from "antd";
-import { invoiceApi } from "../../api";
+
+import { useGetAllInvoicesQuery } from "../../api/invoiceApi";
 import { IInvoice } from "../../models";
 
 const DataTable = () => {
-  const [records, setRecords] = useState<IInvoice[]>(() => []);
-
-  useEffect(() => {
-    (async () => {
-      const response = await invoiceApi.Get({});
-      if (!response.succeed) return;
-
-      setRecords(response.data.records);
-    })();
-  }, []);
+  const { data } = useGetAllInvoicesQuery();
 
   const columns: TableProps<IInvoice>["columns"] = [
     {
@@ -29,7 +19,7 @@ const DataTable = () => {
     },
   ];
 
-  return <Table columns={columns} dataSource={records} />;
+  return <Table columns={columns} dataSource={data?.records} />;
 };
 
 export default DataTable;

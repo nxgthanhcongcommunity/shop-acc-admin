@@ -1,6 +1,8 @@
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import React from "react";
 import { GoogleOutlined, QuestionOutlined } from "@ant-design/icons";
+import { useSigninWithGoogleMutation } from "../../api/authApi";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const LoginBodyWrapper = () => {
   return (
@@ -11,16 +13,25 @@ const LoginBodyWrapper = () => {
 };
 
 const LoginBody = () => {
+  const [signinWithGoogle, { isLoading, isError, data }] =
+    useSigninWithGoogleMutation();
+
   //   const user = useSelector((states) => states.user);
 
   //   const dispatch = useDispatch();
-  //   const navigate = useNavigate();
-  //   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (credential) => {
-      console.log(credential);
-      //   dispatch(GoogleLoginAsync(credential));
+      const { access_token } = credential;
+
+      const response = await signinWithGoogle({
+        accessToken: access_token,
+      }).unwrap();
+
+      localStorage.setItem("JWT", response.token);
+      navigate(searchParams.get("redirect-from") || "/");
     },
   });
 

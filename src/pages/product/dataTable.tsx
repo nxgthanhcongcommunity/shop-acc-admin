@@ -1,21 +1,12 @@
-import { Space, Table, TableProps } from "antd";
-import { useEffect, useState } from "react";
+import { Row, Space, Table, TableProps } from "antd";
 import "react-responsive-pagination/themes/classic.css";
-import productApi from "../../api/productApi";
+import { useGetAllProductsQuery } from "../../api/productApi";
 import { IProduct } from "../../models";
 
 const DataTable = (props: any) => {
   const { setSelectedAction } = props;
-  const [records, setRecords] = useState<IProduct[]>([]);
 
-  useEffect(() => {
-    (async () => {
-      const response = await productApi.GetProducts({});
-      if (!response.succeed) return;
-
-      setRecords(response.data.data);
-    })();
-  }, []);
+  const { data } = useGetAllProductsQuery();
 
   const columns: TableProps<IProduct>["columns"] = [
     {
@@ -90,7 +81,7 @@ const DataTable = (props: any) => {
     },
   ];
 
-  return <Table columns={columns} dataSource={records} />;
+  return <Table columns={columns} dataSource={data?.records} />;
 };
 
 export default DataTable;

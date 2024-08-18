@@ -1,25 +1,10 @@
-import { useEffect, useState } from "react";
 import { Table, TableProps } from "antd";
 import "react-responsive-pagination/themes/classic.css";
-import { accountApi } from "../../api";
+import { useGetAllAccountsQuery } from "../../api/accountApi";
 import { IAccount } from "../../models";
-import { useGetAllAccountsQuery } from "../../api/appApi";
 
 const DataTable = () => {
-  const [records, setRecords] = useState<IAccount[]>(() => []);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await accountApi.GetAccounts({});
-  //     if (!response.succeed) return;
-
-  //     setRecords(response.data.records);
-  //   })();
-  // }, []);
-
-  const { data } = useGetAllAccountsQuery();
-
-  console.log("data", data);
+  const { isLoading, data } = useGetAllAccountsQuery();
 
   const columns: TableProps<IAccount>["columns"] = [
     {
@@ -67,7 +52,13 @@ const DataTable = () => {
     },
   ];
 
-  return <Table columns={columns} dataSource={records} />;
+  return (
+    <Table
+      loading={isLoading}
+      columns={columns}
+      dataSource={data?.records ?? []}
+    />
+  );
 };
 
 export default DataTable;

@@ -1,21 +1,10 @@
 import { Space, Table, TableProps } from "antd";
-import React, { useEffect, useState } from "react";
-import { categoryApi } from "../../api";
 import { ICategory } from "../../models";
+import { useGetAllCategoriesQuery } from "../../api/categoryApi";
 
 const DataTable = (props: any) => {
   const { setSelectedAction } = props;
-  const [records, setRecords] = React.useState<ICategory[]>(() => []);
-  const [reloadGridToggle, setReloadGridToggle] = useState<boolean>(false);
-
-  useEffect(() => {
-    (async () => {
-      const response = await categoryApi.GetCategories({});
-      if (!response.succeed) return;
-
-      setRecords(response.data.data);
-    })();
-  }, [reloadGridToggle]);
+  const { isLoading, data } = useGetAllCategoriesQuery();
 
   const columns: TableProps<ICategory>["columns"] = [
     {
@@ -55,7 +44,7 @@ const DataTable = (props: any) => {
     },
   ];
 
-  return <Table columns={columns} dataSource={records} />;
+  return <Table columns={columns} dataSource={data?.records ?? []} />;
 };
 
 export default DataTable;

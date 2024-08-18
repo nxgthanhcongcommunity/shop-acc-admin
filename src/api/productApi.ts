@@ -1,48 +1,42 @@
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { METHODS } from "../constants";
 import { IProduct } from "../models";
-import axiosInstance from "./axiosInstance";
-import { fetchApiAsync } from "./utils";
+import baseQuery from "./baseQuery";
 
-const productApi = {
-  AddProduct: async (product: IProduct | FormData) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.POST,
-          url: "product/add-product",
-          data: product,
-        })
-    ),
+export const productApi = createApi({
+  reducerPath: "productApi",
+  baseQuery,
+  endpoints: (builder) => ({
+    getAllProducts: builder.query<IPaging<IProduct>, void>({
+      query: (queryConfig) => "product/get-products",
+    }),
+    addProduct: builder.mutation<IProduct, any>({
+      query: (payload) => ({
+        url: `product/add-product`,
+        method: "POST",
+        body: payload,
+      }),
+    }),
+    updateProduct: builder.mutation<IProduct, any>({
+      query: (payload) => ({
+        url: `product/update-product`,
+        method: "PUT",
+        body: payload,
+      }),
+    }),
+    deleteProduct: builder.mutation<IProduct, any>({
+      query: (payload) => ({
+        url: `product/delete-product`,
+        method: METHODS.DELETE,
+        body: payload,
+      }),
+    }),
+  }),
+});
 
-  UpdateProduct: async (product: IProduct | FormData) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.PUT,
-          url: "product/update-product",
-          data: product,
-        })
-    ),
-
-  DeleteProduct: async (product: IProduct | FormData) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.DELETE,
-          url: "product/delete-product",
-          data: product,
-        })
-    ),
-
-  GetProducts: async (queryConfig: any) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.GET,
-          url: "product/get-products",
-          params: queryConfig,
-        })
-    ),
-};
-
-export default productApi;
+export const {
+  useGetAllProductsQuery,
+  useAddProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+} = productApi;

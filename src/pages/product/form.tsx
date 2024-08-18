@@ -1,17 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { categoryApi } from "../../api";
-import productApi from "../../api/productApi";
+import { v4 as uuidv4 } from "uuid";
+import { useGetAllCategoriesQuery } from "../../api/categoryApi";
+import {
+  useAddProductMutation,
+  useDeleteProductMutation,
+  useUpdateProductMutation,
+} from "../../api/productApi";
 import { InputField, MultiInputsField, SelectField } from "../../components";
 import { MultiInputsFieldRef } from "../../components/multi-inputs-field";
 import { TOASTMSG_TYPES } from "../../constants";
-import { ICategory, IProduct } from "../../models";
+import { IProduct } from "../../models";
 import { useToast } from "../../providers/toastProvider";
-import { v4 as uuidv4 } from "uuid";
 
 const Form = (props: any) => {
   const { selectedAction, setSelectedAction } = props;
-  const [categories, setCategories] = useState<ICategory[]>();
   const multiInputsFieldRef = useRef<MultiInputsFieldRef>(null);
 
   const { addToastMessage } = useToast();
@@ -34,14 +37,7 @@ const Form = (props: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAction]);
 
-  useEffect(() => {
-    (async () => {
-      const { succeed, data } = await categoryApi.GetCategories({});
-      if (!succeed) return;
-
-      setCategories(data.data);
-    })();
-  }, []);
+  const { data: categoryResponse } = useGetAllCategoriesQuery();
 
   const {
     register,
@@ -57,6 +53,10 @@ const Form = (props: any) => {
     }
   };
 
+  const [addProduct] = useAddProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
+
   const handleFormSubmit: SubmitHandler<IProduct> = async (data) => {
     const multiInputItems = handleGetItems();
     data.childsFilesCLDId = JSON.stringify(multiInputItems);
@@ -65,29 +65,29 @@ const Form = (props: any) => {
 
     switch (selectedAction.action) {
       case "create":
-        response = await productApi.AddProduct(data);
+        response = await addProduct(data);
         break;
       case "update":
-        response = await productApi.UpdateProduct(data);
+        response = await updateProduct(data);
         break;
       case "delete":
-        response = await productApi.DeleteProduct(data);
+        response = await deleteProduct(data);
         break;
     }
 
-    if (response?.succeed) {
-      addToastMessage({
-        id: "" + Date.now(),
-        type: TOASTMSG_TYPES.SUCCESS,
-        title: "Thao tác thành công",
-        content: "",
-      });
-    } else {
+    if (response?.error) {
       addToastMessage({
         id: "" + Date.now(),
         type: TOASTMSG_TYPES.ERROR,
         title: "Có lỗi xảy ra",
         content: "Vui lòng liên hệ admin",
+      });
+    } else {
+      addToastMessage({
+        id: "" + Date.now(),
+        type: TOASTMSG_TYPES.SUCCESS,
+        title: "Thao tác thành công",
+        content: "",
       });
     }
 
@@ -120,9 +120,6 @@ const Form = (props: any) => {
   return (
     <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow mb-4">
       <form className="space-y-2" onSubmit={handleSubmit(handleFormSubmit)}>
-        <h5 className="text-lg font-medium text-gray-900 mb-6">
-          Quản lý Acc game
-        </h5>
         <div className="grid grid-cols-4 gap-x-8 gap-y-4">
           <InputField
             fieldName="Tên sản phẩm"
@@ -199,7 +196,7 @@ const Form = (props: any) => {
           <SelectField
             fieldName="Loại"
             field="categoryId"
-            items={categories?.map(({ id, name }) => ({
+            items={categoryResponse?.records.map(({ id, name }) => ({
               name: name,
               value: id,
             }))}

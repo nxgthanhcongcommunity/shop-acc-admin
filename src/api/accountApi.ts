@@ -1,17 +1,15 @@
-import { METHODS } from "../constants";
-import axiosInstance from "./axiosInstance";
-import { fetchApiAsync } from "./utils";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQuery from "./baseQuery";
+import { IAccount } from "../models";
 
-const accountApi = {
-  GetAccounts: async (queryConfig: any) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.GET,
-          url: "account/get-all-accounts",
-          params: queryConfig,
-        })
-    ),
-};
+export const accountApi = createApi({
+  reducerPath: "accountApi",
+  baseQuery,
+  endpoints: (builder) => ({
+    getAllAccounts: builder.query<IPaging<IAccount>, void>({
+      query: () => `account/get-all-accounts`,
+    }),
+  }),
+});
 
-export default accountApi;
+export const { useGetAllAccountsQuery } = accountApi;

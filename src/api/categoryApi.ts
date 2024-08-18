@@ -1,58 +1,42 @@
 import { METHODS } from "../constants";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQuery from "./baseQuery";
 import { ICategory } from "../models";
-import axiosInstance from "./axiosInstance";
-import { fetchApiAsync } from "./utils";
 
-const categoryApi = {
-  GetAccounts: async (queryConfig: any) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.GET,
-          url: "account/get-accounts",
-          params: queryConfig,
-        })
-    ),
+export const categoryApi = createApi({
+  reducerPath: "categoryApi",
+  baseQuery,
+  endpoints: (builder) => ({
+    getAllCategories: builder.query<IPaging<ICategory>, void>({
+      query: (queryConfig) => `category/get-categories`,
+    }),
+    addCategory: builder.mutation<ICategory, any>({
+      query: (payload) => ({
+        url: `category/add-category`,
+        method: "POST",
+        body: payload,
+      }),
+    }),
+    updateCategory: builder.mutation<ICategory, any>({
+      query: (payload) => ({
+        url: `category/update-category`,
+        method: "PUT",
+        body: payload,
+      }),
+    }),
+    deleteCategory: builder.mutation<ICategory, any>({
+      query: (payload) => ({
+        url: `category/delete-category`,
+        method: METHODS.DELETE,
+        body: payload,
+      }),
+    }),
+  }),
+});
 
-  GetCategories: async (queryConfig: any) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.GET,
-          url: "category/get-categories",
-          params: queryConfig,
-        })
-    ),
-
-  AddCategory: async (category: ICategory | FormData) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.POST,
-          url: "category/add-category",
-          data: category,
-        })
-    ),
-
-  UpdateCategory: async (category: ICategory) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.PUT,
-          url: "category/update-category",
-          data: category,
-        })
-    ),
-
-  DeleteCategory: async (category: ICategory) =>
-    await fetchApiAsync(
-      async () =>
-        await axiosInstance({
-          method: METHODS.DELETE,
-          url: "category/delete-category",
-          data: category,
-        })
-    ),
-};
-
-export default categoryApi;
+export const {
+  useGetAllCategoriesQuery,
+  useAddCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+} = categoryApi;

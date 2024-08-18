@@ -1,21 +1,10 @@
-import { useEffect, useState } from "react";
-
 import { Table, TableProps } from "antd";
 import "react-responsive-pagination/themes/classic.css";
-import { sendmailApi } from "../../api";
+import { useGetAllSendMailsQuery } from "../../api/sendmailApi";
 import { ISendMail } from "../../models";
 
 const DataTable = () => {
-  const [records, setRecords] = useState<ISendMail[]>(() => []);
-
-  useEffect(() => {
-    (async () => {
-      const response = await sendmailApi.Get({});
-      if (!response.succeed) return;
-
-      setRecords(response.data.records);
-    })();
-  }, []);
+  const { data } = useGetAllSendMailsQuery();
 
   const columns: TableProps<ISendMail>["columns"] = [
     {
@@ -60,7 +49,7 @@ const DataTable = () => {
     },
   ];
 
-  return <Table columns={columns} dataSource={records} />;
+  return <Table columns={columns} dataSource={data?.records} />;
 };
 
 export default DataTable;

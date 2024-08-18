@@ -1,20 +1,9 @@
-import { useEffect, useState } from "react";
-
 import { Table, TableProps } from "antd";
-import { transactionApi } from "../../api";
+import { useGetAllTransactionsQuery } from "../../api/transactionApi";
 import { ITransaction } from "../../models";
 
 const DataTable = () => {
-  const [records, setRecords] = useState<ITransaction[]>(() => []);
-
-  useEffect(() => {
-    (async () => {
-      const response = await transactionApi.Get({});
-      if (!response.succeed) return;
-
-      setRecords(response.data.records);
-    })();
-  }, []);
+  const { data } = useGetAllTransactionsQuery();
 
   const columns: TableProps<ITransaction>["columns"] = [
     {
@@ -74,7 +63,7 @@ const DataTable = () => {
     },
   ];
 
-  return <Table columns={columns} dataSource={records} />;
+  return <Table columns={columns} dataSource={data?.records} />;
 };
 
 export default DataTable;
